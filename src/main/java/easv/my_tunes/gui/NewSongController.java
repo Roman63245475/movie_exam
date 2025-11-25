@@ -100,6 +100,10 @@ public class NewSongController implements Initializable, OtherWindow {
 
     public void getObject(Object obj) {
         this.obj = (Song) obj;
+        if (type == "Edit") {
+            fillFields();
+        }
+
     }
 
     public void getMainController(MainController controller){
@@ -162,9 +166,13 @@ public class NewSongController implements Initializable, OtherWindow {
             return;
         }
         
-        if (selectedFile == null) {
+        if (selectedFile == null && type.equals("New")) {
             showAlert("Validation Error", "Please choose an MP3 file.");
             return;
+        }
+
+        if (selectedFile == null && type.equals("Edit")) {
+            selectedFile = new File(obj.getPath());
         }
         AudioFile audioFile = AudioFileIO.read(selectedFile);
         AudioHeader audioHeader = audioFile.getAudioHeader();
@@ -177,15 +185,11 @@ public class NewSongController implements Initializable, OtherWindow {
             mainController.getEditSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile, obj);
             closeWindow();
         }
+    }
 
-//        System.out.println("Saving song:");
-//        System.out.println("Title: " + titleField.getText());
-//        System.out.println("Artist: " + artistField.getText());
-//        System.out.println("Category: " + categoryComboBox.getValue());
-//        System.out.println("Time: " + timeField.getText());
-//        System.out.println("File: " + selectedFile.getAbsolutePath());
-
-
+    private void fillFields() {
+        timeField.setText(obj.getTime());
+        filePathField.setText(obj.getPath());
     }
     
     @FXML

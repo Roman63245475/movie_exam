@@ -256,8 +256,19 @@ public class MainController implements Initializable {
     }
 
     public void getEditSongData(String title, String artist, String category, int time, File file, Song obj) {
+        int id = playListsTable.getSelectionModel().getSelectedItem().getID();
         logic.editSong(title, artist, category, time, file, obj);
         displaySongs(logic.loadSongs());
+        String name = obj.getTitle();
+        List<Playlist> playlists = logic.loadPlaylists();
+        displayPlaylists(playlists);
+        for (Playlist playlist : playlists) {
+            if (id == playlist.getID()) {
+                displaySongsInPlaylist(playlist);
+                playListsTable.getSelectionModel().select(playlist);
+            }
+        }
+
     }
 
     public void getEditPlaylistData(Playlist obj, String name) {

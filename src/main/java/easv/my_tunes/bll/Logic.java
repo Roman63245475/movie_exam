@@ -51,8 +51,28 @@ public class Logic {
     }
 
     public void editSong(String title, String artist, String category, int time, File file, Song obj) {
-        Path targetPath = createFile(file);
-        songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
+        obj.setTitle(title);
+        obj.setArtist(artist);
+        obj.setCategory(category);
+        obj.setTime(time);
+        if (file != null) {
+            obj.setPath(createFile(file).toString()); // если новый файл
+        }
+        Path targetPath;
+        if (file.toPath().equals(obj.getPath())) {
+            targetPath = file.toPath();
+            songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
+        } else {
+            targetPath = createFile(file);
+            songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
+        }
+//        Path targetPath;
+//        if (file.getAbsolutePath().equals(new File(obj.getPath()).getAbsolutePath())) {
+//            targetPath = Path.of(obj.getPath());
+//        } else {
+//            targetPath = createFile(file);
+//        }
+//        songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
     }
 
     public void deleteSong(Song song) {

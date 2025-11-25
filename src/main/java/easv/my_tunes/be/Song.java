@@ -48,4 +48,20 @@ public class Song {
     public String getPath(){
         return path;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public void setTime(int time) {
+        this.time = time;
+    }
+    public void setPath(String path) {
+        this.path = path;
+    }
 }
