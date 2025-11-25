@@ -5,6 +5,7 @@ import easv.my_tunes.be.Song;
 import easv.my_tunes.bll.Logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,6 +46,15 @@ public class MainController implements Initializable {
 
     @FXML
     private TableColumn<Song,String> songDuration;
+
+    @FXML
+    private Button newPlaylistButton;
+
+    @FXML
+    private Button EditPlaylistButton;
+
+    @FXML
+    private Button EditSongButton;
 
     private Logic logic;
 
@@ -124,16 +134,42 @@ public class MainController implements Initializable {
     }
     
     @FXML
-    private void onNewSongClick() {
-        newWindow("song");
+    private void onNewOrEditSongClick(ActionEvent actionEvent) {
+        Object source = actionEvent.getSource();
+        String actionType = "";
+        if (source == EditSongButton) {
+            Object obj = songsTable.getSelectionModel().getSelectedItem();
+            if (obj != null) {
+                actionType = "Edit";
+                newWindow("song", actionType, obj);
+            }
+        }
+        else{
+            actionType = "New";
+            newWindow("song",  actionType, null);
+        }
+
     }
 
     @FXML
-    private void addNewPlaylist(){
-        newWindow("playlist");
+    private void addNewOrEditPlaylist(ActionEvent actionEvent) {
+        Object source = actionEvent.getSource();
+        String actionType = "";
+        if (source == EditPlaylistButton) {
+            Object obj = playListsTable.getSelectionModel().getSelectedItem();
+            if (obj != null) {
+                actionType = "Edit";
+                newWindow("playlist", actionType, obj);
+            }
+        }
+        else{
+            actionType = "New";
+            newWindow("playlist", actionType, null);
+        }
+
     }
 
-    private void newWindow(String type) {
+    private void newWindow(String type, String actionType, Object obj) {
         String fileName = (type.equals("playlist") ? "add-new-playlist.fxml" : "new-song-window.fxml");
         String title = (type.equals("playlist") ? "New/Edit Playlist" : "New/Edit Song");
 
@@ -143,6 +179,8 @@ public class MainController implements Initializable {
             stage.setScene(new Scene(loader.load()));
             OtherWindow controller = loader.getController();
             controller.getMainController(this);
+            controller.getType(actionType);
+            controller.getObject(obj);
             stage.setTitle(title);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -151,6 +189,7 @@ public class MainController implements Initializable {
         }
     }
 
+
     @FXML
     private void addSongToPlaylist(){
         Song song = songsTable.getSelectionModel().getSelectedItem();
@@ -158,11 +197,6 @@ public class MainController implements Initializable {
         if (song != null && playlist != null) {
             logic.addSongToPlaylist(playlist, song);
         }
-        displayPlaylists(logic.loadPlaylists());
-    }
-
-    public void getNewPlayListData(String name){
-        logic.savePlayList(name);
         displayPlaylists(logic.loadPlaylists());
     }
 
@@ -220,4 +254,20 @@ public class MainController implements Initializable {
         logic.saveSong(title,  artist, category, time, file);
         displaySongs(logic.loadSongs());
     }
+
+    public void getEditSongData(String title, String artist, String category, int time, File file, Song obj) {
+        logic.editSong(title, artist, category, time, file, obj);
+        displaySongs(logic.loadSongs());
+    }
+
+    public void getEditPlaylistData(Playlist obj, String name) {
+        logic.editPlaylist(name, obj);
+        displayPlaylists(logic.loadPlaylists());
+    }
+
+    public void getNewPlayListData(String name){
+        logic.savePlayList(name);
+        displayPlaylists(logic.loadPlaylists());
+    }
+
 }

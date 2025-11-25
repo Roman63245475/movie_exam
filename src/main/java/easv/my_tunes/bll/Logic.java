@@ -34,17 +34,7 @@ public class Logic {
     }
 
     public void saveSong(String title, String artist, String category, int time, File file) {
-        Path dirPath = Path.of("src/main/resources/easv/my_tunes/audio");
-        File dir = dirPath.toFile();
-        dir.mkdirs();
-        Path targetPath = dirPath.resolve(file.getName());
-
-        try {
-            Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Path targetPath = createFile(file);
         songsAccessObject.saveSong(title, artist, category, time, targetPath);
     }
 
@@ -52,7 +42,30 @@ public class Logic {
         playListAccessObject.savePlayList(name);
     }
 
+    public void editPlaylist(String name, Playlist obj){
+        playListAccessObject.editPlaylist(name, obj);
+    }
+
     public void addSongToPlaylist(Playlist playlist, Song song) {
         playLists_songs_AccessObject.addSongToPlaylist(playlist, song);
+    }
+
+    public void editSong(String title, String artist, String category, int time, File file, Song obj) {
+        Path targetPath = createFile(file);
+        songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
+    }
+
+    private Path createFile(File file) {
+        Path dirPath = Path.of("src/main/resources/easv/my_tunes/audio");
+        File dir = dirPath.toFile();
+        dir.mkdirs();
+        Path targetPath = dirPath.resolve(file.getName());
+        try {
+            Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            return targetPath;
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

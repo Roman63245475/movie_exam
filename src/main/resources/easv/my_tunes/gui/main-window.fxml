@@ -34,13 +34,13 @@
       <Label layoutX="543.0" layoutY="117.0" text="Songs" />
       <Button layoutX="790.0" layoutY="599.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="48.0" text="Close" />
       <Button layoutX="691.0" layoutY="598.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="62.0" text="Delete" />
-      <Button layoutX="617.0" layoutY="599.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="50.0" text="Edit..." />
-      <Button fx:id="newSongButton" layoutX="543.0" layoutY="598.0" mnemonicParsing="false" onAction="#onNewSongClick" prefHeight="36.0" prefWidth="50.0" text="New..." />
+      <Button fx:id="EditSongButton" layoutX="617.0" layoutY="599.0" mnemonicParsing="false" onAction="#onNewOrEditSongClick" prefHeight="36.0" prefWidth="50.0" text="Edit..." />
+      <Button fx:id="newSongButton" layoutX="543.0" layoutY="598.0" mnemonicParsing="false" onAction="#onNewOrEditSongClick" prefHeight="36.0" prefWidth="50.0" text="New..." />
       <Button layoutX="276.0" layoutY="599.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="48.0" text="🡇" />
       <Button layoutX="339.0" layoutY="599.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="50.0" text="🡅" />
       <Button layoutX="413.0" layoutY="599.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="62.0" text="Delete" />
-      <Button layoutX="40.0" layoutY="599.0" mnemonicParsing="false" onAction="#addNewPlaylist" prefHeight="36.0" prefWidth="50.0" text="New..." />
-      <Button layoutX="108.0" layoutY="599.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="50.0" text="Edit..." />
+      <Button fx:id="newPlaylistButton" layoutX="40.0" layoutY="599.0" mnemonicParsing="false" onAction="#addNewOrEditPlaylist" prefHeight="36.0" prefWidth="50.0" text="New..." />
+      <Button fx:id="EditPlaylistButton" layoutX="108.0" layoutY="599.0" mnemonicParsing="false" onAction="#addNewOrEditPlaylist" prefHeight="36.0" prefWidth="50.0" text="Edit..." />
       <Button layoutX="195.0" layoutY="598.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="50.0" text="Delete" />
       <Button layoutX="490.0" layoutY="141.0" mnemonicParsing="false" onAction="#addSongToPlaylist" prefHeight="42.0" prefWidth="42.0" text="🡄" />
       <Label layoutX="618.0" layoutY="39.0" text="Filter:" />

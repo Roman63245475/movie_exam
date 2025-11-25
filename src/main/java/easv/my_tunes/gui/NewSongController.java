@@ -1,5 +1,6 @@
 package easv.my_tunes.gui;
 
+import easv.my_tunes.be.Song;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -24,6 +25,8 @@ public class NewSongController implements Initializable, OtherWindow {
     
     @FXML
     private TextField titleField;
+
+    private String type;
     
     @FXML
     private TextField artistField;
@@ -47,6 +50,8 @@ public class NewSongController implements Initializable, OtherWindow {
     
     @FXML
     private Button saveButton;
+
+    private Song obj;
     
     @FXML
     private Button cancelButton;
@@ -87,6 +92,14 @@ public class NewSongController implements Initializable, OtherWindow {
             filePathField.setText(selectedFile.getName());
             calculateAndSetDuration();
         }
+    }
+
+    public void getType(String type) {
+        this.type = type;
+    }
+
+    public void getObject(Object obj) {
+        this.obj = (Song) obj;
     }
 
     public void getMainController(MainController controller){
@@ -156,7 +169,15 @@ public class NewSongController implements Initializable, OtherWindow {
         AudioFile audioFile = AudioFileIO.read(selectedFile);
         AudioHeader audioHeader = audioFile.getAudioHeader();
         int durationInSeconds = audioHeader.getTrackLength();
-        mainController.getNewSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile);
+        if (type.equals("New")) {
+            mainController.getNewSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile);
+            closeWindow();
+        }
+        else {
+            mainController.getEditSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile, obj);
+            closeWindow();
+        }
+
 //        System.out.println("Saving song:");
 //        System.out.println("Title: " + titleField.getText());
 //        System.out.println("Artist: " + artistField.getText());
@@ -164,7 +185,7 @@ public class NewSongController implements Initializable, OtherWindow {
 //        System.out.println("Time: " + timeField.getText());
 //        System.out.println("File: " + selectedFile.getAbsolutePath());
 
-        closeWindow();
+
     }
     
     @FXML

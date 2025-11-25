@@ -55,4 +55,16 @@ public class PlayListAccessObject {
     }
 
 
+    public void editPlaylist(String name, Playlist obj) {
+        try(Connection con = ConnectionManager.getConnection()){
+            String sqlPrompt =  "Update playlists set name = ? where id = ?";
+            PreparedStatement ps = con.prepareStatement(sqlPrompt);
+            ps.setString(1, name);
+            ps.setInt(2, obj.getID());
+            ps.execute();
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }
