@@ -10,12 +10,17 @@ import javafx.collections.ObservableList;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewSongController implements Initializable {
+public class NewSongController implements Initializable, OtherWindow {
     
     @FXML
     private TextField titleField;
@@ -25,6 +30,8 @@ public class NewSongController implements Initializable {
     
     @FXML
     private ComboBox<String> categoryComboBox;
+
+    private MainController mainController;
     
     @FXML
     private Button moreButton;
@@ -81,6 +88,10 @@ public class NewSongController implements Initializable {
             calculateAndSetDuration();
         }
     }
+
+    public void getMainController(MainController controller){
+        this.mainController = controller;
+    }
     
     private void calculateAndSetDuration() {
         if (selectedFile == null) {
@@ -122,7 +133,7 @@ public class NewSongController implements Initializable {
     }
     
     @FXML
-    private void onSaveClick() {
+    private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
         if (titleField.getText().trim().isEmpty()) {
             showAlert("Validation Error", "Please enter a title.");
             return;
@@ -142,13 +153,16 @@ public class NewSongController implements Initializable {
             showAlert("Validation Error", "Please choose an MP3 file.");
             return;
         }
-        
-        System.out.println("Saving song:");
-        System.out.println("Title: " + titleField.getText());
-        System.out.println("Artist: " + artistField.getText());
-        System.out.println("Category: " + categoryComboBox.getValue());
-        System.out.println("Time: " + timeField.getText());
-        System.out.println("File: " + selectedFile.getAbsolutePath());
+        AudioFile audioFile = AudioFileIO.read(selectedFile);
+        AudioHeader audioHeader = audioFile.getAudioHeader();
+        int durationInSeconds = audioHeader.getTrackLength();
+        mainController.getNewSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile);
+//        System.out.println("Saving song:");
+//        System.out.println("Title: " + titleField.getText());
+//        System.out.println("Artist: " + artistField.getText());
+//        System.out.println("Category: " + categoryComboBox.getValue());
+//        System.out.println("Time: " + timeField.getText());
+//        System.out.println("File: " + selectedFile.getAbsolutePath());
 
         closeWindow();
     }

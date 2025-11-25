@@ -38,4 +38,3 @@ build/
 ### Mac OS ###
 .DS_Store
 src/main/java/easv/my_tunes/dal/ConnectionManager.java
-src/main/java/easv/my_tunes/dal/DataAccessObject.java
