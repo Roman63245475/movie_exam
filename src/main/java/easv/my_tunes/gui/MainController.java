@@ -315,4 +315,48 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    private void moveSongUp() {
+        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+        Playlist currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
+
+        // Pokud je něco vybráno a není to úplně nahoře
+        if (index > 0 && currentPlaylist != null) {
+            // 1. Úprava dat v paměti (Playlist objekt)
+            List<Song> songs = currentPlaylist.getSongsList();
+            Song temp = songs.get(index);
+            songs.set(index, songs.get(index - 1));
+            songs.set(index - 1, temp);
+
+            // 2. Úprava zobrazení (ListView)
+            ObservableList<Song> items = songsInPlaylistList.getItems();
+            Song item = items.get(index);
+            items.remove(index);
+            items.add(index - 1, item);
+
+            // 3. Udržení výběru
+            songsInPlaylistList.getSelectionModel().select(index - 1);
+        }
+    }
+
+    @FXML
+    private void moveSongDown() {
+        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+        Playlist currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
+        ObservableList<Song> items = songsInPlaylistList.getItems();
+
+        if (index >= 0 && index < items.size() - 1 && currentPlaylist != null) {
+            List<Song> songs = currentPlaylist.getSongsList();
+            Song temp = songs.get(index);
+            songs.set(index, songs.get(index + 1));
+            songs.set(index + 1, temp);
+
+            Song item = items.get(index);
+            items.remove(index);
+            items.add(index + 1, item);
+
+            songsInPlaylistList.getSelectionModel().select(index + 1);
+        }
+    }
+
 }
