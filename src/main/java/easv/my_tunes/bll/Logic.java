@@ -79,6 +79,10 @@ public class Logic {
         songsAccessObject.deleteSong(song);
     }
 
+    public void deletePlaylist(Playlist playlist) {
+        playListAccessObject.deletePlaylist(playlist);
+    }
+
     private Path createFile(File file) {
         Path dirPath = Path.of("src/main/resources/easv/my_tunes/audio");
         File dir = dirPath.toFile();

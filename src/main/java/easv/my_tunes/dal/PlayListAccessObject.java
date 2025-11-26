@@ -54,7 +54,6 @@ public class PlayListAccessObject {
         }
     }
 
-
     public void editPlaylist(String name, Playlist obj) {
         try(Connection con = ConnectionManager.getConnection()){
             String sqlPrompt =  "Update playlists set name = ? where id = ?";
@@ -64,6 +63,21 @@ public class PlayListAccessObject {
             ps.execute();
         }
         catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    public void deletePlaylist(Playlist playlist) {
+        try (Connection con = ConnectionManager.getConnection()) {
+            String sqlRel = "DELETE FROM playlist_songs WHERE playlist_id = ?";
+            PreparedStatement psRel = con.prepareStatement(sqlRel);
+            psRel.setInt(1, playlist.getID());
+            psRel.execute();
+
+            String sql = "DELETE FROM playlists WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, playlist.getID());
+            ps.execute();
+        } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
