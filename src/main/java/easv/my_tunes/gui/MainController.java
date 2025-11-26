@@ -54,6 +54,9 @@ public class MainController implements Initializable {
     private Button newPlaylistButton;
 
     @FXML
+    private Button controlButton;
+
+    @FXML
     private Button EditPlaylistButton;
 
     @FXML
@@ -146,6 +149,7 @@ public class MainController implements Initializable {
 
             player = new MediaPlayer(media);
             player.play();
+            controlButton.setText("| |");
 
             if (volumeSlider != null) {
                 player.setVolume(volumeSlider.getValue() / 100.0);
@@ -156,8 +160,51 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void stop() {
-        player.stop();
+    private void continueOrStop() {
+        if (player != null) {
+            if (controlButton.getText().equals("| |")) {
+                controlButton.setText("▶");
+                player.pause();
+            }
+            else {
+                controlButton.setText("| |");
+                player.play();
+            }
+        }
+    }
+
+    @FXML
+    private void nextSong(){
+        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+        Song selectedSong;
+        if (index < songsInPlaylistList.getItems().size() - 1) {
+            index++;
+            songsInPlaylistList.getSelectionModel().select(index);
+            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        }
+        else {
+            index = 0;
+            songsInPlaylistList.getSelectionModel().select(index);
+            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        }
+        playMusic(selectedSong);
+    }
+
+    @FXML
+    private void previousSong(){
+        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+        Song selectedSong;
+        if (index > 0) {
+            index--;
+            songsInPlaylistList.getSelectionModel().select(index);
+            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        }
+        else {
+            index = songsInPlaylistList.getItems().size() - 1;
+            songsInPlaylistList.getSelectionModel().select(index);
+            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        }
+        playMusic(selectedSong);
     }
 
     @FXML
