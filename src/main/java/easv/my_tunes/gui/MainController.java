@@ -85,6 +85,9 @@ public class MainController implements Initializable {
     @FXML
     private TextField filterTextField;
 
+    @FXML
+    private Label lblCurrentSong;
+
     private FilteredList<Song> filteredSongs;
 
     @Override
@@ -130,6 +133,10 @@ public class MainController implements Initializable {
         File file = new File(path);
 
         if (file.exists()) {
+            if (lblCurrentSong != null) {
+                lblCurrentSong.setText(song.getTitle() + " - " + song.getArtist());
+            }
+
             String uriString = file.toURI().toString();
             Media media = new Media(uriString);
 

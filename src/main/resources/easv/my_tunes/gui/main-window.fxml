@@ -117,7 +117,9 @@
             <children>
                 <VBox alignment="CENTER_LEFT" prefWidth="200.0">
                     <children>
-                        <Label text="Now Playing..." textFill="WHITE" />
+                        <Label text="Now Playing..." textFill="#b3b3b3" />
+
+                        <Label fx:id="lblCurrentSong" text="-" textFill="WHITE" style="-fx-font-weight: bold;" />
                     </children>
                     <padding>
                         <Insets left="30.0" />
