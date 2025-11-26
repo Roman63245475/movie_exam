@@ -122,10 +122,27 @@ public class MainController implements Initializable {
 
     @FXML
     private void playMusic(Song song) {
-        String uriString = new File(song.getPath()).toURI().toString();
-        Media media = new Media(uriString);
-        player =  new MediaPlayer(media);
-        player.play();
+        String path = song.getPath().replace("\\", "/");
+
+        File file = new File(path);
+
+        if (file.exists()) {
+            String uriString = file.toURI().toString();
+            Media media = new Media(uriString);
+
+            if (player != null) {
+                player.stop();
+            }
+
+            player = new MediaPlayer(media);
+            player.play();
+
+            if (volumeSlider != null) {
+                player.setVolume(volumeSlider.getValue() / 100.0);
+            }
+        } else {
+            System.out.println("Soubor nebyl nalezen: " + path);
+        }
     }
 
     @FXML
@@ -202,7 +219,6 @@ public class MainController implements Initializable {
 
     private void setupVolumeSwipeGesture() {
         if (volumeSlider != null) {
-            // Swipe doprava = zvýšení hlasitosti
             volumeSlider.setOnSwipeRight((SwipeEvent event) -> {
                 double newValue = volumeSlider.getValue() + 10;
                 if (newValue > volumeSlider.getMax()) {
@@ -212,7 +228,6 @@ public class MainController implements Initializable {
                 System.out.println("Volume UP: " + newValue);
             });
             
-            // Swipe doleva = snížení hlasitosti
             volumeSlider.setOnSwipeLeft((SwipeEvent event) -> {
                 double newValue = volumeSlider.getValue() - 10;
                 if (newValue < volumeSlider.getMin()) {
@@ -222,10 +237,8 @@ public class MainController implements Initializable {
                 System.out.println("Volume DOWN: " + newValue);
             });
             
-            // Listener pro změny hodnoty slideru
             volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("Volume changed: " + newValue.intValue());
-                // Zde můžete přidat logiku pro skutečné změny hlasitosti přehrávače
             });
         }
     }
@@ -305,21 +318,17 @@ public class MainController implements Initializable {
         int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
         Playlist currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
 
-        // Pokud je něco vybráno a není to úplně nahoře
         if (index > 0 && currentPlaylist != null) {
-            // 1. Úprava dat v paměti (Playlist objekt)
             List<Song> songs = currentPlaylist.getSongsList();
             Song temp = songs.get(index);
             songs.set(index, songs.get(index - 1));
             songs.set(index - 1, temp);
 
-            // 2. Úprava zobrazení (ListView)
             ObservableList<Song> items = songsInPlaylistList.getItems();
             Song item = items.get(index);
             items.remove(index);
             items.add(index - 1, item);
 
-            // 3. Udržení výběru
             songsInPlaylistList.getSelectionModel().select(index - 1);
         }
     }
