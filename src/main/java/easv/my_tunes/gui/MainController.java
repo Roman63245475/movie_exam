@@ -32,8 +32,8 @@ public class MainController implements Initializable {
     @FXML
     private Label welcomeText;
 
-    @FXML
-    MediaPlayer player;
+
+    private MediaPlayer player;
 
     @FXML
     private TableView<Song> songsTable;
@@ -148,6 +148,7 @@ public class MainController implements Initializable {
             }
 
             player = new MediaPlayer(media);
+            player.setOnEndOfMedia(this::nextSong);
             player.play();
             controlButton.setText("| |");
 
