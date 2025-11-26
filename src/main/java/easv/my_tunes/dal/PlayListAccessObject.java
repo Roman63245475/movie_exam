@@ -13,33 +13,47 @@ import java.util.List;
 
 public class PlayListAccessObject {
 
-    public List<Playlist> getPlaylists(){
+    public List<Playlist> getPlaylists() {
         HashMap<Integer, Playlist> playlists = new HashMap<>();
         try (Connection con = ConnectionManager.getConnection()) {
-            String sqlPrompt = "select playlists.id as playlist_id, playlists.name as playlist_name, playlist_songs.song_id as song_id, songs.title as song_title, songs.artist as song_artist, songs.category as song_category, songs.time as song_time, songs.path as song_path from playlists LEFT JOIN playlist_songs ON playlists.id = playlist_songs.playlist_id LEFT JOIN songs on playlist_songs.song_id = songs.id";
+            String sqlPrompt = "SELECT playlists.id AS playlist_id, playlists.name AS playlist_name, " +
+                    "playlist_songs.song_id AS song_id, songs.title AS song_title, " +
+                    "songs.artist AS song_artist, songs.category AS song_category, " +
+                    "songs.time AS song_time, songs.path AS song_path " +
+                    "FROM playlists " +
+                    "LEFT JOIN playlist_songs ON playlists.id = playlist_songs.playlist_id " +
+                    "LEFT JOIN songs ON playlist_songs.song_id = songs.id";
+
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 int playlistID = rs.getInt("playlist_id");
                 Playlist playlist = playlists.get(playlistID);
+
                 if (playlist == null) {
                     String playlistName = rs.getString("playlist_name");
-                    Song song = new Song(rs.getInt("song_id"), rs.getString("song_title"), rs.getString("song_artist"), rs.getString("song_category"), rs.getInt("song_time"), rs.getString("song_path"));
-                    Playlist playlist1 = new Playlist(playlistID, playlistName);
-                    playlist1.addSong(song);
-                    playlists.put(playlistID, playlist1);
+                    playlist = new Playlist(playlistID, playlistName);
+                    playlists.put(playlistID, playlist);
                 }
-                else {
-                    Song song = new Song(rs.getInt("song_id"), rs.getString("song_title"), rs.getString("song_artist"), rs.getString("song_category"), rs.getInt("song_time"), rs.getString("song_path"));
+
+                Integer songId = rs.getObject("song_id", Integer.class);
+                if (songId != null) {
+                    Song song = new Song(
+                            songId,
+                            rs.getString("song_title"),
+                            rs.getString("song_artist"),
+                            rs.getString("song_category"),
+                            rs.getInt("song_time"),
+                            rs.getString("song_path")
+                    );
                     playlist.addSong(song);
                 }
             }
             return new ArrayList<>(playlists.values());
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     public void savePlayList(String name){

@@ -233,6 +233,7 @@ public class MainController implements Initializable {
             int id = playListsTable.getSelectionModel().getSelectedItem().getID();
             logic.deleteSongFromPlaylist(song, playlist);
             List<Playlist> playlists = logic.loadPlaylists();
+            displayPlaylists(playlists);
             for (Playlist playlst : playlists) {
                 if (id == playlst.getID()) {
                     displaySongsInPlaylist(playlst);
