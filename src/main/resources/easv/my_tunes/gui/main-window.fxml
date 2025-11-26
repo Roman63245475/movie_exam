@@ -12,7 +12,7 @@
                 <Label styleClass="header-label" text="MyTunes 🎵" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label text="Filter:" />
-                <TextField promptText="Search song..." />
+                <TextField fx:id="filterTextField" promptText="Search song..." />
                 <Button mnemonicParsing="false" text="🔍" />
             </children>
             <padding>

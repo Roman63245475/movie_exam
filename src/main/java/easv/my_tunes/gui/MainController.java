@@ -25,6 +25,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+
 public class MainController implements Initializable {
     @FXML
     private Label welcomeText;
@@ -36,16 +39,16 @@ public class MainController implements Initializable {
     private TableView<Song> songsTable;
 
     @FXML
-    private TableColumn<Song,String> songTitle;
+    private TableColumn<Song, String> songTitle;
 
     @FXML
-    private TableColumn<Song,String> songArtist;
+    private TableColumn<Song, String> songArtist;
 
     @FXML
-    private TableColumn<Song,String> songCategory;
+    private TableColumn<Song, String> songCategory;
 
     @FXML
-    private TableColumn<Song,String> songDuration;
+    private TableColumn<Song, String> songDuration;
 
     @FXML
     private Button newPlaylistButton;
@@ -65,19 +68,24 @@ public class MainController implements Initializable {
     private ListView<Song> songsInPlaylistList;
 
     @FXML
-    private TableColumn<Playlist,String> playListName;
+    private TableColumn<Playlist, String> playListName;
 
     @FXML
     private TableColumn<Playlist, Integer> playListSongs;
 
     @FXML
-    private TableColumn<Playlist,String> playListTime;
-    
+    private TableColumn<Playlist, String> playListTime;
+
     @FXML
     private Slider volumeSlider;
-    
+
     @FXML
     private Button newSongButton;
+
+    @FXML
+    private TextField filterTextField;
+
+    private FilteredList<Song> filteredSongs;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,7 +101,7 @@ public class MainController implements Initializable {
         setActionOnSelectedItemListView();
     }
 
-    private void setActionOnSelectedItemListView(){
+    private void setActionOnSelectedItemListView() {
         songsInPlaylistList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 playMusic(newValue);
@@ -101,7 +109,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void setActionOnSelectedItemTableView(){
+    private void setActionOnSelectedItemTableView() {
         playListsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 displaySongsInPlaylist(newValue);
@@ -109,7 +117,7 @@ public class MainController implements Initializable {
         });
     }
 
-    private void displaySongsInPlaylist(Playlist playlist){
+    private void displaySongsInPlaylist(Playlist playlist) {
         ObservableList<Song> lst = FXCollections.observableArrayList();
         lst.addAll(logic.getSongsOnPlaylist(playlist));
         songsInPlaylistList.setItems(lst);
@@ -144,7 +152,7 @@ public class MainController implements Initializable {
     private void stop() {
         player.stop();
     }
-    
+
     @FXML
     private void onNewOrEditSongClick(ActionEvent actionEvent) {
         Object source = actionEvent.getSource();
@@ -155,10 +163,9 @@ public class MainController implements Initializable {
                 actionType = "Edit";
                 newWindow("song", actionType, obj);
             }
-        }
-        else{
+        } else {
             actionType = "New";
-            newWindow("song",  actionType, null);
+            newWindow("song", actionType, null);
         }
 
     }
@@ -173,8 +180,7 @@ public class MainController implements Initializable {
                 actionType = "Edit";
                 newWindow("playlist", actionType, obj);
             }
-        }
-        else{
+        } else {
             actionType = "New";
             newWindow("playlist", actionType, null);
         }
@@ -203,7 +209,7 @@ public class MainController implements Initializable {
 
 
     @FXML
-    private void addSongToPlaylist(){
+    private void addSongToPlaylist() {
         Song song = songsTable.getSelectionModel().getSelectedItem();
         Playlist playlist = playListsTable.getSelectionModel().getSelectedItem();
         if (song != null && playlist != null) {
@@ -213,7 +219,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void deleteSongFomPlaylist(){
+    private void deleteSongFomPlaylist() {
         Song song = songsInPlaylistList.getSelectionModel().getSelectedItem();
         Playlist playlist = playListsTable.getSelectionModel().getSelectedItem();
         if (song != null && playlist != null) {
@@ -239,7 +245,7 @@ public class MainController implements Initializable {
                 volumeSlider.setValue(newValue);
                 System.out.println("Volume UP: " + newValue);
             });
-            
+
             volumeSlider.setOnSwipeLeft((SwipeEvent event) -> {
                 double newValue = volumeSlider.getValue() - 10;
                 if (newValue < volumeSlider.getMin()) {
@@ -248,7 +254,7 @@ public class MainController implements Initializable {
                 volumeSlider.setValue(newValue);
                 System.out.println("Volume DOWN: " + newValue);
             });
-            
+
             volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("Volume changed: " + newValue.intValue());
             });
@@ -258,11 +264,37 @@ public class MainController implements Initializable {
     private void displaySongs(List<Song> songs) {
         ObservableList<Song> songList = FXCollections.observableArrayList();
         songList.addAll(songs);
+
+        filteredSongs = new FilteredList<>(songList, b -> true);
+
+        if (filterTextField != null) {
+            filterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredSongs.setPredicate(song -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+                    String lowerCaseFilter = newValue.toLowerCase();
+
+                    if (song.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (song.getArtist().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
+        }
+
+        SortedList<Song> sortedData = new SortedList<>(filteredSongs);
+        sortedData.comparatorProperty().bind(songsTable.comparatorProperty());
+
         songTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         songArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
         songCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         songDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
-        songsTable.setItems(songList);
+
+        songsTable.setItems(sortedData);
     }
 
     private void displayPlaylists(List<Playlist> playlists) {
@@ -276,7 +308,7 @@ public class MainController implements Initializable {
 
 
     public void getNewSongData(String title, String artist, String category, int time, File file) {
-        logic.saveSong(title,  artist, category, time, file);
+        logic.saveSong(title, artist, category, time, file);
         displaySongs(logic.loadSongs());
     }
 
@@ -301,7 +333,7 @@ public class MainController implements Initializable {
         displayPlaylists(logic.loadPlaylists());
     }
 
-    public void getNewPlayListData(String name){
+    public void getNewPlayListData(String name) {
         logic.savePlayList(name);
         displayPlaylists(logic.loadPlaylists());
     }

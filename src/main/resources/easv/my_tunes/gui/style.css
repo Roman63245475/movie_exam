@@ -23,6 +23,7 @@
     -fx-border-color: transparent;
     -fx-padding: 6 12 6 12;
 }
+
 .text-field:focused {
     -fx-background-color: #484848;
     -fx-border-color: #1db954;
@@ -53,6 +54,7 @@
     -fx-text-fill: white;
     -fx-border-color: transparent;
 }
+
 .action-button:hover {
     -fx-background-color: #1ed760;
     -fx-text-fill: white;
@@ -66,6 +68,7 @@
     -fx-min-height: 40px;
     -fx-font-size: 14px;
 }
+
 .play-button {
     -fx-min-width: 50px;
     -fx-min-height: 50px;
@@ -73,6 +76,7 @@
     -fx-border-color: white;
     -fx-text-fill: white;
 }
+
 .play-button:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
@@ -110,16 +114,21 @@
     -fx-border-width: 0 0 0 0;
     -fx-text-fill: white;
 }
+
 .table-row-cell:odd, .list-cell:odd {
     -fx-background-color: #181818;
 }
+
 .table-row-cell:hover, .list-cell:hover {
     -fx-background-color: #2a2a2a;
 }
+
 .table-row-cell:selected, .list-cell:selected {
-    -fx-background-color: #333333;
-    -fx-text-fill: #1db954;
+    -fx-background-color: #1db954;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
 }
+
 .table-cell {
     -fx-text-fill: white;
     -fx-alignment: center-left;
@@ -128,10 +137,12 @@
 .scroll-bar:vertical, .scroll-bar:horizontal {
     -fx-background-color: transparent;
 }
+
 .scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb {
     -fx-background-color: #535353;
     -fx-background-radius: 5em;
 }
+
 .scroll-bar:vertical .thumb:hover, .scroll-bar:horizontal .thumb:hover {
     -fx-background-color: #808080;
 }
@@ -140,6 +151,7 @@
     -fx-background-color: transparent;
     -fx-padding: 0;
 }
+
 .split-pane-divider {
     -fx-background-color: #121212;
     -fx-padding: 0 2 0 2;
