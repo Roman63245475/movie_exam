@@ -5,12 +5,16 @@ import easv.my_tunes.be.Song;
 import easv.my_tunes.dal.PlayListAccessObject;
 import easv.my_tunes.dal.Playlists_SongsAccessObject;
 import easv.my_tunes.dal.SongsAccessObject;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -75,13 +79,123 @@ public class Logic {
 //        songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
     }
 
+//    public void deleteSong(Song song) {
+//        File file = new File(song.getPath()).getAbsoluteFile();
+//        if (file.exists()) {
+//            for (int i = 0; i < 100; i++){
+//                if (Platform.runLater(() -> {file.delete();})) {
+//                    break;
+//                }
+//            }
+//        }
+//        songsAccessObject.deleteSong(song);
+//
+//    }
+
     public void deleteSong(Song song) {
         File file = new File(song.getPath()).getAbsoluteFile();
-        if (file.exists()) {
-            file.delete();
-        }
-        songsAccessObject.deleteSong(song);
 
+        if (file.exists()) {
+            // Даём время антивирусу и системе освободить файл
+            boolean deleted = deleteWithRetry(file);
+
+            if (!deleted) {
+                System.out.println("Failed to delete: " + file.getAbsolutePath());
+                // Помечаем для удаления при следующем запуске
+                file.deleteOnExit();
+            }
+        }
+
+        songsAccessObject.deleteSong(song);
+    }
+
+    private boolean deleteWithRetry(File file) {
+        for (int i = 0; i < 3; i++) { // 3 попытки
+            if (file.delete()) {
+                return true;
+            }
+
+            // Ждём между попытками
+            try {
+                Thread.sleep(100 * (i + 1)); // 100ms, 200ms, 300ms
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+
+            // Принудительно освобождаем ресурсы
+            System.gc();
+        }
+        return false;
+    }
+
+//    public void deleteSong(Song song) {
+//        File file = new File(song.getPath()).getAbsoluteFile();
+//
+//        System.out.println("Delete attempt:");
+//        System.out.println("Path: " + file.getAbsolutePath());
+//        System.out.println("Exists: " + file.exists());
+//        System.out.println("Is file: " + file.isFile());
+//        System.out.println("Can read: " + file.canRead());
+//        System.out.println("Can write: " + file.canWrite());
+//        System.out.println("Parent can write: " + file.getParentFile().canWrite());
+//
+//        boolean deleted = file.delete();
+//        System.out.println("Delete result: " + deleted);
+//
+//        if (!deleted) {
+//            // Проверяем причину
+//            checkDeleteFailureReason(file);
+//        }
+//
+//        songsAccessObject.deleteSong(song);
+//    }
+
+//    private void checkDeleteFailureReason(File file) {
+//        if (!file.exists()) {
+//            System.out.println("File doesn't exist");
+//            return;
+//        }
+//
+//        if (!file.canWrite()) {
+//            System.out.println("No write permission");
+//        }
+//
+//        // Проверяем, не открыт ли файл
+//        if (isFileLocked(file)) {
+//            System.out.println("File is locked by another process");
+//        }
+//
+//        // Проверяем путь
+//        try {
+//            System.out.println("Canonical path: " + file.getCanonicalPath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    private boolean isFileLocked(File file) {
+        if (!file.exists() || !file.isFile()) {
+            return false;
+        }
+
+        try (FileChannel channel = FileChannel.open(file.toPath(),
+                StandardOpenOption.WRITE,
+                StandardOpenOption.APPEND)) {
+            // Пытаемся получить эксклюзивную блокировку
+            FileLock lock = channel.tryLock();
+            if (lock != null) {
+                lock.release(); // Сразу отпускаем
+                return false; // Файл не заблокирован
+            }
+            return true; // Не удалось получить блокировку - файл занят
+        } catch (IOException e) {
+            // OverlappingFileLockException или другие IOException
+            return true; // Файл заблокирован
+        } catch (Exception e) {
+            System.out.println("Error checking lock: " + e.getMessage());
+            return true; // В случае ошибки считаем заблокированным
+        }
     }
 
     public void deletePlaylist(Playlist playlist) {

@@ -404,6 +404,28 @@ public class MainController implements Initializable {
         displayPlaylists(logic.loadPlaylists());
     }
 
+//    @FXML
+//    private void onDeleteSongClick() {
+//        if (player != null) {
+//            player.stop();
+//            player.dispose();
+//            player = null;
+//        }
+//        Song selectedSong = songsTable.getSelectionModel().getSelectedItem();
+//        new Thread(() -> {
+//            try {
+//                Thread.sleep(2000L);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            if (selectedSong != null) {
+//                logic.deleteSong(selectedSong);
+//                songsTable.getSelectionModel().clearSelection();
+//                Platform.runLater(() -> displaySongs(logic.loadSongs()));
+//            }
+//        }).start();
+//    }
+
     @FXML
     private void onDeleteSongClick() {
         if (player != null) {
@@ -413,7 +435,8 @@ public class MainController implements Initializable {
         }
         Song selectedSong = songsTable.getSelectionModel().getSelectedItem();
         if (selectedSong != null) {
-            Platform.runLater(() -> logic.deleteSong(selectedSong));
+            //Platform.runLater(() -> logic.deleteSong(selectedSong));
+            logic.deleteSong(selectedSong);
             songsTable.getSelectionModel().clearSelection();
             displaySongs(logic.loadSongs());
         }
