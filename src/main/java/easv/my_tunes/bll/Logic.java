@@ -76,8 +76,7 @@ public class Logic {
     }
 
     public void deleteSong(Song song) {
-        Path targetPath = Path.of(song.getPath());
-        File file = targetPath.toFile();
+        File file = new File(song.getPath()).getAbsoluteFile();
         if (file.exists()) {
             file.delete();
         }
