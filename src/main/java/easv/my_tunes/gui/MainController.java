@@ -94,6 +94,8 @@ public class MainController implements Initializable {
 
     private FilteredList<Song> filteredSongs;
 
+    private boolean flag;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //setupVolumeSwipeGesture();
@@ -115,6 +117,8 @@ public class MainController implements Initializable {
     private void setActionOnSelectedItemTableViewSongs() {
         songsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                flag = true;
+                songsInPlaylistList.getSelectionModel().clearSelection();
                 playMusic(newValue);
             }
         });
@@ -123,6 +127,8 @@ public class MainController implements Initializable {
     private void setActionOnSelectedItemListView() {
         songsInPlaylistList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                flag = false;
+                songsTable.getSelectionModel().clearSelection();
                 playMusic(newValue);
             }
         });
@@ -189,35 +195,69 @@ public class MainController implements Initializable {
 
     @FXML
     private void nextSong(){
-        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
         Song selectedSong;
-        if (index < songsInPlaylistList.getItems().size() - 1) {
-            index++;
-            songsInPlaylistList.getSelectionModel().select(index);
-            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        if (flag){
+            int index = songsTable.getSelectionModel().getSelectedIndex();
+            //Song selectedSong;
+            if (index < songsTable.getItems().size() - 1) {
+                index++;
+                songsTable.getSelectionModel().select(index);
+                selectedSong = songsTable.getSelectionModel().getSelectedItem();
+            }
+            else {
+                index = 0;
+                songsTable.getSelectionModel().select(index);
+                selectedSong = songsTable.getSelectionModel().getSelectedItem();
+            }
         }
-        else {
-            index = 0;
-            songsInPlaylistList.getSelectionModel().select(index);
-            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        else{
+            int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+            //Song selectedSong;
+            if (index < songsInPlaylistList.getItems().size() - 1) {
+                index++;
+                songsInPlaylistList.getSelectionModel().select(index);
+                selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+            }
+            else {
+                index = 0;
+                songsInPlaylistList.getSelectionModel().select(index);
+                selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+            }
         }
+
         playMusic(selectedSong);
     }
 
     @FXML
     private void previousSong(){
-        int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
         Song selectedSong;
-        if (index > 0) {
-            index--;
-            songsInPlaylistList.getSelectionModel().select(index);
-            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        if (flag){
+            int index = songsTable.getSelectionModel().getSelectedIndex();
+            if (index > 0) {
+                index--;
+                songsTable.getSelectionModel().select(index);
+                selectedSong = songsTable.getSelectionModel().getSelectedItem();
+            }
+            else {
+                index = songsTable.getItems().size() - 1;
+                songsTable.getSelectionModel().select(index);
+                selectedSong = songsTable.getSelectionModel().getSelectedItem();
+            }
         }
-        else {
-            index = songsInPlaylistList.getItems().size() - 1;
-            songsInPlaylistList.getSelectionModel().select(index);
-            selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        else{
+            int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
+            if (index > 0) {
+                index--;
+                songsInPlaylistList.getSelectionModel().select(index);
+                selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+            }
+            else {
+                index = songsInPlaylistList.getItems().size() - 1;
+                songsInPlaylistList.getSelectionModel().select(index);
+                selectedSong = songsInPlaylistList.getSelectionModel().getSelectedItem();
+            }
         }
+
         playMusic(selectedSong);
     }
 
@@ -389,6 +429,7 @@ public class MainController implements Initializable {
         logic.saveSong(title, artist, category, time, file);
         displaySongs(logic.loadSongs());
     }
+
 
     public void getEditSongData(String title, String artist, String category, Song obj) {
         logic.editSong(title, artist, category,  obj);
