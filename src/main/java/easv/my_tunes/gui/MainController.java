@@ -355,29 +355,6 @@ public class MainController implements Initializable {
         if (player != null) {
             player.setVolume(newvalue / 100.0);
         }
-//        if (volumeSlider != null) {
-//            volumeSlider.setOnSwipeRight((SwipeEvent event) -> {
-//                double newValue = volumeSlider.getValue() + 10;
-//                if (newValue > volumeSlider.getMax()) {
-//                    newValue = volumeSlider.getMax();
-//                }
-//                volumeSlider.setValue(newValue);
-//                System.out.println("Volume UP: " + newValue);
-//            });
-//
-//            volumeSlider.setOnSwipeLeft((SwipeEvent event) -> {
-//                double newValue = volumeSlider.getValue() - 10;
-//                if (newValue < volumeSlider.getMin()) {
-//                    newValue = volumeSlider.getMin();
-//                }
-//                volumeSlider.setValue(newValue);
-//                System.out.println("Volume DOWN: " + newValue);
-//            });
-//
-//            volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-//                System.out.println("Volume changed: " + newValue.intValue());
-//            });
-//        }
     }
 
     private void displaySongs(List<Song> songs) {
@@ -452,28 +429,6 @@ public class MainController implements Initializable {
         logic.savePlayList(name);
         displayPlaylists(logic.loadPlaylists());
     }
-
-//    @FXML
-//    private void onDeleteSongClick() {
-//        if (player != null) {
-//            player.stop();
-//            player.dispose();
-//            player = null;
-//        }
-//        Song selectedSong = songsTable.getSelectionModel().getSelectedItem();
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(2000L);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//            if (selectedSong != null) {
-//                logic.deleteSong(selectedSong);
-//                songsTable.getSelectionModel().clearSelection();
-//                Platform.runLater(() -> displaySongs(logic.loadSongs()));
-//            }
-//        }).start();
-//    }
 
     @FXML
     private void onDeleteSongClick() {

@@ -60,27 +60,7 @@ public class Logic {
         obj.setCategory(category);
         //obj.setTime(time);
         songsAccessObject.editSong(title, artist, category, obj);
-//        Path targetPath;
-//        if (file.getAbsolutePath().equals(new File(obj.getPath()).getAbsolutePath())) {
-//            targetPath = Path.of(obj.getPath());
-//        } else {
-//            targetPath = createFile(file);
-//        }
-//        songsAccessObject.editSong(title, artist, category, time, targetPath, obj);
     }
-
-//    public void deleteSong(Song song) {
-//        File file = new File(song.getPath()).getAbsoluteFile();
-//        if (file.exists()) {
-//            for (int i = 0; i < 100; i++){
-//                if (Platform.runLater(() -> {file.delete();})) {
-//                    break;
-//                }
-//            }
-//        }
-//        songsAccessObject.deleteSong(song);
-//
-//    }
 
     public void deleteSong(Song song) {
         File file = new File(song.getPath()).getAbsoluteFile();
@@ -119,50 +99,6 @@ public class Logic {
         return false;
     }
 
-//    public void deleteSong(Song song) {
-//        File file = new File(song.getPath()).getAbsoluteFile();
-//
-//        System.out.println("Delete attempt:");
-//        System.out.println("Path: " + file.getAbsolutePath());
-//        System.out.println("Exists: " + file.exists());
-//        System.out.println("Is file: " + file.isFile());
-//        System.out.println("Can read: " + file.canRead());
-//        System.out.println("Can write: " + file.canWrite());
-//        System.out.println("Parent can write: " + file.getParentFile().canWrite());
-//
-//        boolean deleted = file.delete();
-//        System.out.println("Delete result: " + deleted);
-//
-//        if (!deleted) {
-//            // Проверяем причину
-//            checkDeleteFailureReason(file);
-//        }
-//
-//        songsAccessObject.deleteSong(song);
-//    }
-
-//    private void checkDeleteFailureReason(File file) {
-//        if (!file.exists()) {
-//            System.out.println("File doesn't exist");
-//            return;
-//        }
-//
-//        if (!file.canWrite()) {
-//            System.out.println("No write permission");
-//        }
-//
-//        // Проверяем, не открыт ли файл
-//        if (isFileLocked(file)) {
-//            System.out.println("File is locked by another process");
-//        }
-//
-//        // Проверяем путь
-//        try {
-//            System.out.println("Canonical path: " + file.getCanonicalPath());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private boolean isFileLocked(File file) {
         if (!file.exists() || !file.isFile()) {
