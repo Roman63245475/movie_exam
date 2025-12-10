@@ -154,7 +154,7 @@
                     </padding>
                 </HBox>
 
-                <Button mnemonicParsing="false" text="Close">
+                <Button mnemonicParsing="false" text="Close" onAction="#onCloseClick">
                     <HBox.margin>
                         <Insets right="30.0" />
                     </HBox.margin>

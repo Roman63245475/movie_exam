@@ -45,7 +45,10 @@ public class Song {
     public String getCategory(){
         return category;
     }
-    public String getTime(){
+    public String getTime() {
+        if (time < 0) {
+            return "00:00";
+        }
         int minutes = time / 60;
         int seconds = time % 60;
         return String.format("%02d:%02d", minutes, seconds);
