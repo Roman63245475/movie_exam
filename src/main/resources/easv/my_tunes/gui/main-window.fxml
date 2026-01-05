@@ -30,7 +30,7 @@
                         <TableView fx:id="playListsTable" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="playListName" prefWidth="100.0" text="Name" />
-                                <TableColumn fx:id="playListTime" prefWidth="70.0" text="Amount" />
+                                <TableColumn fx:id="movieAmount" prefWidth="70.0" text="Amount" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

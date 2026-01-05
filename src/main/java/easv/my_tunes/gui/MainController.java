@@ -69,10 +69,7 @@ public class MainController implements Initializable {
     private TableColumn<Category, String> playListName;
 
     @FXML
-    private TableColumn<Category, Integer> playListSongs;
-
-    @FXML
-    private TableColumn<Category, String> playListTime;
+    private TableColumn<Category, Integer> movieAmount;
 
     @FXML
     private Slider volumeSlider;
@@ -405,8 +402,7 @@ public class MainController implements Initializable {
         ObservableList<Category> categoriesList = FXCollections.observableArrayList();
         categoriesList.addAll(playlists);
         playListName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        playListSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
-        playListTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        movieAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
         playListsTable.setItems(categoriesList);
     }
 
