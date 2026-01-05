@@ -34,9 +34,9 @@ public class Logic {
         return playListAccessObject.getCategories();
     }
 
-    public void saveSong(String title, String artist, String category, int time, File file) {
+    public void saveSong(String title, int time, File file) {
         Path targetPath = createFile(file);
-        songsAccessObject.saveSong(title, artist, category, time, targetPath);
+        songsAccessObject.saveSong(title, time, targetPath);
     }
 
     public void savePlayList(String name){
@@ -124,7 +124,7 @@ public class Logic {
     }
 
     private Path createFile(File file) {
-        Path dirPath = Path.of("src/main/resources/easv/my_tunes/audio");
+        Path dirPath = Path.of("src/main/resources/easv/my_tunes/movies");
         dirPath.toFile().mkdirs();
 
         String baseName = file.getName();

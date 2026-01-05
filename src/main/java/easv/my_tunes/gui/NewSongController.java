@@ -19,6 +19,7 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 public class NewSongController implements Initializable, OtherWindow {
@@ -66,10 +67,10 @@ public class NewSongController implements Initializable, OtherWindow {
     @FXML
     private void onChooseFileClick() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose MP3 File");
+        fileChooser.setTitle("Choose MP4 or mpeg4 File");
         
         FileChooser.ExtensionFilter mp3Filter =
-            new FileChooser.ExtensionFilter("MP3 Files (*.mp3)", "*.mp3");
+            new FileChooser.ExtensionFilter("MP3 Files (*.mp3)", "*.mp4");
         fileChooser.getExtensionFilters().add(mp3Filter);
         
         Stage stage = (Stage) chooseFileButton.getScene().getWindow();
@@ -116,10 +117,9 @@ public class NewSongController implements Initializable, OtherWindow {
         }
         
         try {
-            AudioFile audioFile = AudioFileIO.read(selectedFile);
-            AudioHeader audioHeader = audioFile.getAudioHeader();
+            File file = selectedFile;
             
-            int durationInSeconds = audioHeader.getTrackLength();
+            int durationInSeconds = 111;
             
             int minutes = durationInSeconds / 60;
             int seconds = durationInSeconds % 60;
@@ -141,16 +141,7 @@ public class NewSongController implements Initializable, OtherWindow {
             showAlert("Validation Error", "Please enter a title.");
             return;
         }
-        
-        if (artistField.getText().trim().isEmpty()) {
-            showAlert("Validation Error", "Please enter an artist.");
-            return;
-        }
-        
-        if (categoryComboBox.getValue() == null) {
-            showAlert("Validation Error", "Please select a category.");
-            return;
-        }
+
         
         if (selectedFile == null && type.equals("New")) {
             showAlert("Validation Error", "Please choose an MP3 file.");
@@ -158,10 +149,10 @@ public class NewSongController implements Initializable, OtherWindow {
         }
 
         if (type.equals("New")) {
-            AudioFile audioFile = AudioFileIO.read(selectedFile);
-            AudioHeader audioHeader = audioFile.getAudioHeader();
-            int durationInSeconds = audioHeader.getTrackLength();
-            mainController.getNewSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), durationInSeconds, selectedFile);
+            //AudioFile audioFile = AudioFileIO.read(selectedFile);
+            //AudioHeader audioHeader = audioFile.getAudioHeader();
+            int durationInSeconds = 111;
+            mainController.getNewSongData(titleField.getText(), durationInSeconds, selectedFile);
             closeWindow();
         }
         else {

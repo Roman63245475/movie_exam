@@ -21,7 +21,6 @@ public class MoviesAccessObject {
             while(rs.next()){
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                String category = rs.getString("category");
                 int time = rs.getInt("duration");
                 String path = rs.getString("path");
                 movies.add(new Movie(id, name, time, path));
@@ -33,15 +32,13 @@ public class MoviesAccessObject {
         }
     }
 
-    public void saveSong(String title, String artist, String category, int time, Path targetPath) {
+    public void saveSong(String title, int time, Path targetPath) {
         try (Connection con = ConnectionManager.getConnection()){
-            String sqlPrompt = "Insert Into songs (title, artist, category, time, path) VALUES (?,?,?,?,?)";
+            String sqlPrompt = "Insert Into movie_table (name, duration, path) VALUES (?,?,?)";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             pst.setString(1, title);
-            pst.setString(2, artist);
-            pst.setString(3, category);
-            pst.setInt(4, time);
-            pst.setString(5, targetPath.toString());
+            pst.setInt(2, time);
+            pst.setString(3, targetPath.toString());
             pst.execute();
         }
         catch (SQLException e) {
