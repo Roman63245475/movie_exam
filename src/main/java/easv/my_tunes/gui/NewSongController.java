@@ -1,6 +1,6 @@
 package easv.my_tunes.gui;
 
-import easv.my_tunes.be.Song;
+import easv.my_tunes.be.Movie;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -51,29 +51,16 @@ public class NewSongController implements Initializable, OtherWindow {
     @FXML
     private Button saveButton;
 
-    private Song obj;
+    private Movie obj;
     
     @FXML
     private Button cancelButton;
     
     private File selectedFile;
-    private ObservableList<String> genres;
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        genres = FXCollections.observableArrayList(
-            "Pop",
-            "Rock",
-            "Jazz",
-            "Classical",
-            "Hip-Hop",
-            "Electronic",
-            "Country",
-            "R&B",
-            "Metal",
-            "Folk"
-        );
-        categoryComboBox.setItems(genres);
+        return;
     }
     
     @FXML
@@ -107,7 +94,7 @@ public class NewSongController implements Initializable, OtherWindow {
     }
 
     public void getObject(Object obj) {
-        this.obj = (Song) obj;
+        this.obj = (Movie) obj;
         if (type == "Edit") {
             fillFields();
         }
@@ -146,21 +133,7 @@ public class NewSongController implements Initializable, OtherWindow {
             timeField.setText("Unknown");
         }
     }
-    
-    @FXML
-    private void onMoreButtonClick() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Add New Genre");
-        dialog.setHeaderText("Add a new music genre");
-        dialog.setContentText("Genre name:");
-        
-        dialog.showAndWait().ifPresent(genre -> {
-            if (!genre.trim().isEmpty() && !genres.contains(genre)) {
-                genres.add(genre);
-                categoryComboBox.setValue(genre);
-            }
-        });
-    }
+
     
     @FXML
     private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
@@ -199,8 +172,6 @@ public class NewSongController implements Initializable, OtherWindow {
 
     private void fillFields() {
         titleField.setText(obj.getTitle());
-        artistField.setText(obj.getArtist());
-        categoryComboBox.setValue(obj.getCategory());
         timeField.setText(obj.getTime());
         filePathField.setText(obj.getPath());
     }

@@ -1,9 +1,8 @@
 package easv.my_tunes.gui;
 
-import easv.my_tunes.be.Playlist;
-import easv.my_tunes.be.Song;
+import easv.my_tunes.be.Category;
+import easv.my_tunes.be.Movie;
 import easv.my_tunes.bll.Logic;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.SwipeEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
@@ -37,19 +35,13 @@ public class MainController implements Initializable {
     private MediaPlayer player;
 
     @FXML
-    private TableView<Song> songsTable;
+    private TableView<Movie> songsTable;
 
     @FXML
-    private TableColumn<Song, String> songTitle;
+    private TableColumn<Movie, String> movieTitle;
 
     @FXML
-    private TableColumn<Song, String> songArtist;
-
-    @FXML
-    private TableColumn<Song, String> songCategory;
-
-    @FXML
-    private TableColumn<Song, String> songDuration;
+    private TableColumn<Movie, String> movieDuration;
 
     @FXML
     private Button newPlaylistButton;
@@ -65,22 +57,22 @@ public class MainController implements Initializable {
 
     private Logic logic;
 
-    private Playlist selected_playlist;
+    private Category selected_playlist;
 
     @FXML
-    private TableView<Playlist> playListsTable;
+    private TableView<Category> playListsTable;
 
     @FXML
-    private ListView<Song> songsInPlaylistList;
+    private ListView<Movie> songsInPlaylistList;
 
     @FXML
-    private TableColumn<Playlist, String> playListName;
+    private TableColumn<Category, String> playListName;
 
     @FXML
-    private TableColumn<Playlist, Integer> playListSongs;
+    private TableColumn<Category, Integer> playListSongs;
 
     @FXML
-    private TableColumn<Playlist, String> playListTime;
+    private TableColumn<Category, String> playListTime;
 
     @FXML
     private Slider volumeSlider;
@@ -94,7 +86,7 @@ public class MainController implements Initializable {
     @FXML
     private Label lblCurrentSong;
 
-    private FilteredList<Song> filteredSongs;
+    private FilteredList<Movie> filteredSongs;
 
     private boolean flag;
 
@@ -109,10 +101,10 @@ public class MainController implements Initializable {
         this.logic = new Logic();
         songsTable.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> songsTable.requestFocus());
         playListsTable.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> playListsTable.requestFocus());
-        List<Song> songs = logic.loadSongs();
-        List<Playlist> playlists = logic.loadPlaylists();
-        displaySongs(songs);
-        displayPlaylists(playlists);
+        List<Movie> songs = logic.loadMovies();
+        List<Category> categories = logic.loadCategories();
+        displayMovies(songs);
+        displayCategories(categories);
         setActionOnSelectedItemTableView();
         setActionOnSelectedItemListView();
         setActionOnSelectedItemTableViewSongs();
@@ -151,41 +143,42 @@ public class MainController implements Initializable {
         });
     }
 
-    private void displaySongsInPlaylist(Playlist playlist) {
-        ObservableList<Song> lst = FXCollections.observableArrayList();
+    private void displaySongsInPlaylist(Category playlist) {
+        ObservableList<Movie> lst = FXCollections.observableArrayList();
         lst.addAll(logic.getSongsOnPlaylist(playlist));
         songsInPlaylistList.setItems(lst);
     }
 
     @FXML
-    private void playMusic(Song song) {
-        String path = song.getPath().replace("\\", "/");
-
-        File file = new File(path);
-
-        if (file.exists()) {
-            if (lblCurrentSong != null) {
-                lblCurrentSong.setText(song.getTitle() + " - " + song.getArtist());
-            }
-
-            String uriString = file.toURI().toString();
-            Media media = new Media(uriString);
-
-            if (player != null) {
-                player.stop();
-            }
-
-            player = new MediaPlayer(media);
-            player.setOnEndOfMedia(this::nextSong);
-            player.play();
-            controlButton.setText("| |");
-
-            if (volumeSlider != null) {
-                player.setVolume(volumeSlider.getValue() / 100.0);
-            }
-        } else {
-            System.out.println("Soubor nebyl nalezen: " + path);
-        }
+    private void playMusic(Movie song) {
+//        String path = song.getPath().replace("\\", "/");
+//
+//        File file = new File(path);
+//
+//        if (file.exists()) {
+//            if (lblCurrentSong != null) {
+//                lblCurrentSong.setText(song.getTitle() + " - " + song.getArtist());
+//            }
+//
+//            String uriString = file.toURI().toString();
+//            Media media = new Media(uriString);
+//
+//            if (player != null) {
+//                player.stop();
+//            }
+//
+//            player = new MediaPlayer(media);
+//            player.setOnEndOfMedia(this::nextSong);
+//            player.play();
+//            controlButton.setText("| |");
+//
+//            if (volumeSlider != null) {
+//                player.setVolume(volumeSlider.getValue() / 100.0);
+//            }
+//        } else {
+//            System.out.println("Soubor nebyl nalezen: " + path);
+//        }
+        return;
     }
 
     @FXML
@@ -207,7 +200,7 @@ public class MainController implements Initializable {
         if (flag && songsTable.getItems().isEmpty()) return;
         if (!flag && songsInPlaylistList.getItems().isEmpty()) return;
 
-        Song selectedSong;
+        Movie selectedSong;
 
         if (flag){
             int index = songsTable.getSelectionModel().getSelectedIndex();
@@ -243,7 +236,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void previousSong(){
-        Song selectedSong;
+        Movie selectedSong;
         if (flag){
             int index = songsTable.getSelectionModel().getSelectedIndex();
             if (index > 0) {
@@ -338,28 +331,28 @@ public class MainController implements Initializable {
 
     @FXML
     private void addSongToPlaylist() {
-        Song song = songsTable.getSelectionModel().getSelectedItem();
-        Playlist playlist = playListsTable.getSelectionModel().getSelectedItem();
+        Movie song = songsTable.getSelectionModel().getSelectedItem();
+        Category playlist = playListsTable.getSelectionModel().getSelectedItem();
         if (song != null && playlist != null) {
             logic.addSongToPlaylist(playlist, song);
         }
-        displayPlaylists(logic.loadPlaylists());
+        displayCategories(logic.loadCategories());
         displaySongsInPlaylist(playlist);
     }
 
     @FXML
     private void deleteSongFomPlaylist() {
 
-        Song song = songsInPlaylistList.getSelectionModel().getSelectedItem();
+        Movie song = songsInPlaylistList.getSelectionModel().getSelectedItem();
         //Playlist playlist = playListsTable.getSelectionModel().getSelectedItem();
         if (song != null && selected_playlist != null) {
             player.stop();
             player = null;
             int id = selected_playlist.getID();
             logic.deleteSongFromPlaylist(song, selected_playlist);
-            List<Playlist> playlists = logic.loadPlaylists();
-            displayPlaylists(playlists);
-            for (Playlist playlst : playlists) {
+            List<Category> playlists = logic.loadCategories();
+            displayCategories(playlists);
+            for (Category playlst : playlists) {
                 if (id == playlst.getID()) {
                     displaySongsInPlaylist(playlst);
                     playListsTable.getSelectionModel().select(playlst);
@@ -374,11 +367,11 @@ public class MainController implements Initializable {
         }
     }
 
-    private void displaySongs(List<Song> songs) {
-        ObservableList<Song> songList = FXCollections.observableArrayList();
-        songList.addAll(songs);
+    private void displayMovies(List<Movie> songs) {
+        ObservableList<Movie> movieList = FXCollections.observableArrayList();
+        movieList.addAll(songs);
 
-        filteredSongs = new FilteredList<>(songList, b -> true);
+        filteredSongs = new FilteredList<>(movieList, b -> true);
 
         if (filterTextField != null) {
             filterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -391,65 +384,63 @@ public class MainController implements Initializable {
 
                     if (song.getTitle() != null && song.getTitle().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (song.getArtist() != null && song.getArtist().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    }
+                    } //else if (song.getArtist() != null && song.getArtist().toLowerCase().contains(lowerCaseFilter)) {
+                        //return true;
+                    //}
                     return false;
                 });
             });
         }
 
-        SortedList<Song> sortedData = new SortedList<>(filteredSongs);
+        SortedList<Movie> sortedData = new SortedList<>(filteredSongs);
         sortedData.comparatorProperty().bind(songsTable.comparatorProperty());
 
-        songTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        songArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        songCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
-        songDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
+        movieTitle.setCellValueFactory(new PropertyValueFactory<>("name"));
+        movieDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
 
         songsTable.setItems(sortedData);
     }
 
-    private void displayPlaylists(List<Playlist> playlists) {
-        ObservableList<Playlist> playlistList = FXCollections.observableArrayList();
-        playlistList.addAll(playlists);
+    private void displayCategories(List<Category> playlists) {
+        ObservableList<Category> categoriesList = FXCollections.observableArrayList();
+        categoriesList.addAll(playlists);
         playListName.setCellValueFactory(new PropertyValueFactory<>("name"));
         playListSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
         playListTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        playListsTable.setItems(playlistList);
+        playListsTable.setItems(categoriesList);
     }
 
 
     public void getNewSongData(String title, String artist, String category, int time, File file) {
         logic.saveSong(title, artist, category, time, file);
-        displaySongs(logic.loadSongs());
+        displayMovies(logic.loadMovies());
     }
 
 
-    public void getEditSongData(String title, String artist, String category, Song obj) {
+    public void getEditSongData(String title, String artist, String category, Movie obj) {
         logic.editSong(title, artist, category,  obj);
-        displaySongs(logic.loadSongs());
+        displayMovies(logic.loadMovies());
         String name = obj.getTitle();
-        List<Playlist> playlists = logic.loadPlaylists();
-        displayPlaylists(playlists);
+        List<Category> playlists = logic.loadCategories();
+        displayCategories(playlists);
         playListsTable.getSelectionModel().clearSelection();
         songsInPlaylistList.getItems().clear();
 
     }
 
-    public void getEditPlaylistData(Playlist obj, String name) {
+    public void getEditPlaylistData(Category obj, String name) {
         logic.editPlaylist(name, obj);
-        displayPlaylists(logic.loadPlaylists());
+        displayCategories(logic.loadCategories());
     }
 
     public void getNewPlayListData(String name) {
         logic.savePlayList(name);
-        displayPlaylists(logic.loadPlaylists());
+        displayCategories(logic.loadCategories());
     }
 
     @FXML
     private void onDeleteSongClick() {
-        Song selectedSong = songsTable.getSelectionModel().getSelectedItem();
+        Movie selectedSong = songsTable.getSelectionModel().getSelectedItem();
 
         if (selectedSong != null && player != null && lblCurrentSong.getText().contains(selectedSong.getTitle())) {
             player.stop();
@@ -462,8 +453,8 @@ public class MainController implements Initializable {
             //Platform.runLater(() -> logic.deleteSong(selectedSong));
             logic.deleteSong(selectedSong);
             songsTable.getSelectionModel().clearSelection();
-            displaySongs(logic.loadSongs());
-            displayPlaylists(logic.loadPlaylists());
+            displayMovies(logic.loadMovies());
+            displayCategories(logic.loadCategories());
             if (selected_playlist!=null){
                 displaySongsInPlaylist(selected_playlist);
             }
@@ -473,10 +464,10 @@ public class MainController implements Initializable {
 
     @FXML
     private void onDeletePlaylistClick() {
-        Playlist selectedPlaylist = playListsTable.getSelectionModel().getSelectedItem();
+        Category selectedPlaylist = playListsTable.getSelectionModel().getSelectedItem();
         if (selectedPlaylist != null) {
             logic.deletePlaylist(selectedPlaylist);
-            displayPlaylists(logic.loadPlaylists());
+            displayCategories(logic.loadCategories());
             songsInPlaylistList.getItems().clear();
         }
     }
@@ -484,16 +475,16 @@ public class MainController implements Initializable {
     @FXML
     private void moveSongUp() {
         int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
-        Playlist currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
+        Category currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
 
         if (index > 0 && currentPlaylist != null) {
-            List<Song> songs = currentPlaylist.getSongsList();
-            Song temp = songs.get(index);
+            List<Movie> songs = currentPlaylist.getSongsList();
+            Movie temp = songs.get(index);
             songs.set(index, songs.get(index - 1));
             songs.set(index - 1, temp);
 
-            ObservableList<Song> items = songsInPlaylistList.getItems();
-            Song item = items.get(index);
+            ObservableList<Movie> items = songsInPlaylistList.getItems();
+            Movie item = items.get(index);
             items.remove(index);
             items.add(index - 1, item);
 
@@ -504,16 +495,16 @@ public class MainController implements Initializable {
     @FXML
     private void moveSongDown() {
         int index = songsInPlaylistList.getSelectionModel().getSelectedIndex();
-        Playlist currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
-        ObservableList<Song> items = songsInPlaylistList.getItems();
+        Category currentPlaylist = playListsTable.getSelectionModel().getSelectedItem();
+        ObservableList<Movie> items = songsInPlaylistList.getItems();
 
         if (index >= 0 && index < items.size() - 1 && currentPlaylist != null) {
-            List<Song> songs = currentPlaylist.getSongsList();
-            Song temp = songs.get(index);
+            List<Movie> songs = currentPlaylist.getSongsList();
+            Movie temp = songs.get(index);
             songs.set(index, songs.get(index + 1));
             songs.set(index + 1, temp);
 
-            Song item = items.get(index);
+            Movie item = items.get(index);
             items.remove(index);
             items.add(index + 1, item);
 

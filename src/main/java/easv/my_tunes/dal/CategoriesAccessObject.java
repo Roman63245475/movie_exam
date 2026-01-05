@@ -1,7 +1,7 @@
 package easv.my_tunes.dal;
 
-import easv.my_tunes.be.Playlist;
-import easv.my_tunes.be.Song;
+import easv.my_tunes.be.Category;
+import easv.my_tunes.be.Movie;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,46 +11,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PlayListAccessObject {
+public class CategoriesAccessObject {
 
-    public List<Playlist> getPlaylists() {
-        HashMap<Integer, Playlist> playlists = new HashMap<>();
+    public List<Category> getCategories() {
+        HashMap<Integer, Category> categories = new HashMap<>();
         try (Connection con = ConnectionManager.getConnection()) {
-            String sqlPrompt = "SELECT playlists.id AS playlist_id, playlists.name AS playlist_name, " +
-                    "playlist_songs.song_id AS song_id, songs.title AS song_title, " +
-                    "songs.artist AS song_artist, songs.category AS song_category, " +
-                    "songs.time AS song_time, songs.path AS song_path " +
-                    "FROM playlists " +
-                    "LEFT JOIN playlist_songs ON playlists.id = playlist_songs.playlist_id " +
-                    "LEFT JOIN songs ON playlist_songs.song_id = songs.id";
+            String sqlPrompt = "SELECT category_table.id AS category_id, category_table.name AS category_name, " +
+                    "movie_category.movie_id AS movie_id, movie_table.name AS movie_name, " +
+                    "movie_table.duration AS movie_time, movie_table.path AS movie_path " +
+                    "FROM category_table " +
+                    "LEFT JOIN movie_category ON category_table.id = movie_category.category_id " +
+                    "LEFT JOIN movie_table ON movie_category.movie_id = movie_table.id";
 
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                int playlistID = rs.getInt("playlist_id");
-                Playlist playlist = playlists.get(playlistID);
+                int categoryID = rs.getInt("category_id");
+                Category category = categories.get(categoryID);
 
-                if (playlist == null) {
-                    String playlistName = rs.getString("playlist_name");
-                    playlist = new Playlist(playlistID, playlistName);
-                    playlists.put(playlistID, playlist);
+                if (category == null) {
+                    String categoryName = rs.getString("category_name");
+                    category = new Category(categoryID, categoryName);
+                    categories.put(categoryID, category);
                 }
 
-                Integer songId = rs.getObject("song_id", Integer.class);
-                if (songId != null) {
-                    Song song = new Song(
-                            songId,
-                            rs.getString("song_title"),
-                            rs.getString("song_artist"),
-                            rs.getString("song_category"),
-                            rs.getInt("song_time"),
-                            rs.getString("song_path")
+                Integer movieId = rs.getObject("movie_id", Integer.class);
+                if (movieId != null) {
+                    Movie movie = new Movie(
+                            movieId,
+                            rs.getString("movie_name"),
+                            rs.getInt("movie_time"),
+                            rs.getString("movie_path")
                     );
-                    playlist.addSong(song);
+                    category.addMovie(movie);
                 }
             }
-            return new ArrayList<>(playlists.values());
+            return new ArrayList<>(categories.values());
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -68,7 +65,7 @@ public class PlayListAccessObject {
         }
     }
 
-    public void editPlaylist(String name, Playlist obj) {
+    public void editPlaylist(String name, Category obj) {
         try(Connection con = ConnectionManager.getConnection()){
             String sqlPrompt =  "Update playlists set name = ? where id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
@@ -80,7 +77,7 @@ public class PlayListAccessObject {
             throw new RuntimeException(ex);
         }
     }
-    public void deletePlaylist(Playlist playlist) {
+    public void deletePlaylist(Category playlist) {
         try (Connection con = ConnectionManager.getConnection()) {
             String sqlRel = "DELETE FROM playlist_songs WHERE playlist_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);

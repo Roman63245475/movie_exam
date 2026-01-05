@@ -1,11 +1,10 @@
 package easv.my_tunes.bll;
 
-import easv.my_tunes.be.Playlist;
-import easv.my_tunes.be.Song;
-import easv.my_tunes.dal.PlayListAccessObject;
-import easv.my_tunes.dal.Playlists_SongsAccessObject;
-import easv.my_tunes.dal.SongsAccessObject;
-import javafx.application.Platform;
+import easv.my_tunes.be.Category;
+import easv.my_tunes.be.Movie;
+import easv.my_tunes.dal.CategoriesAccessObject;
+import easv.my_tunes.dal.Movie_CategoryAccessObject;
+import easv.my_tunes.dal.MoviesAccessObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,28 +12,26 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
-import java.sql.SQLException;
 import java.util.List;
 
 public class Logic {
-    SongsAccessObject songsAccessObject;
-    PlayListAccessObject playListAccessObject;
-    Playlists_SongsAccessObject playLists_songs_AccessObject;
+    MoviesAccessObject songsAccessObject;
+    CategoriesAccessObject playListAccessObject;
+    Movie_CategoryAccessObject playLists_songs_AccessObject;
 
     public Logic() {
-        songsAccessObject = new SongsAccessObject();
-        playListAccessObject = new PlayListAccessObject();
-        playLists_songs_AccessObject = new Playlists_SongsAccessObject();
+        songsAccessObject = new MoviesAccessObject();
+        playListAccessObject = new CategoriesAccessObject();
+        playLists_songs_AccessObject = new Movie_CategoryAccessObject();
     }
 
-    public List<Song> loadSongs() {
-        return songsAccessObject.getSongs();
+    public List<Movie> loadMovies() {
+        return songsAccessObject.getMovies();
     }
 
-    public List<Playlist> loadPlaylists(){
-        return playListAccessObject.getPlaylists();
+    public List<Category> loadCategories(){
+        return playListAccessObject.getCategories();
     }
 
     public void saveSong(String title, String artist, String category, int time, File file) {
@@ -46,23 +43,21 @@ public class Logic {
         playListAccessObject.savePlayList(name);
     }
 
-    public void editPlaylist(String name, Playlist obj){
+    public void editPlaylist(String name, Category obj){
         playListAccessObject.editPlaylist(name, obj);
     }
 
-    public void addSongToPlaylist(Playlist playlist, Song song) {
+    public void addSongToPlaylist(Category playlist, Movie song) {
         playLists_songs_AccessObject.addSongToPlaylist(playlist, song);
     }
 
-    public void editSong(String title, String artist, String category, Song obj) {
+    public void editSong(String title, String artist, String category, Movie obj) {
         obj.setTitle(title);
-        obj.setArtist(artist);
-        obj.setCategory(category);
         //obj.setTime(time);
         songsAccessObject.editSong(title, artist, category, obj);
     }
 
-    public void deleteSong(Song song) {
+    public void deleteSong(Movie song) {
         File file = new File(song.getPath()).getAbsoluteFile();
 
         if (file.exists()) {
@@ -124,7 +119,7 @@ public class Logic {
         }
     }
 
-    public void deletePlaylist(Playlist playlist) {
+    public void deletePlaylist(Category playlist) {
         playListAccessObject.deletePlaylist(playlist);
     }
 
@@ -170,11 +165,11 @@ public class Logic {
 //        }
 //    }
 
-    public void deleteSongFromPlaylist(Song song, Playlist playlist) {
+    public void deleteSongFromPlaylist(Movie song, Category playlist) {
         playLists_songs_AccessObject.deleteSong(song, playlist);
     }
 
-    public List<Song> getSongsOnPlaylist(Playlist playlist){
+    public List<Movie> getSongsOnPlaylist(Category playlist){
         return playLists_songs_AccessObject.getSongsOnPlaylist(playlist);
     }
 }

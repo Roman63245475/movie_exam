@@ -1,8 +1,7 @@
 package easv.my_tunes.dal;
 
-import easv.my_tunes.be.Song;
+import easv.my_tunes.be.Movie;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,24 +10,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsAccessObject {
+public class MoviesAccessObject {
 
-    public List<Song> getSongs(){
-        List<Song> songs = new ArrayList<>();
+    public List<Movie> getMovies(){
+        List<Movie> movies = new ArrayList<>();
         try (Connection con = ConnectionManager.getConnection()){
-            String sqlPrompt = "SELECT * FROM songs";
+            String sqlPrompt = "SELECT * FROM movie_table";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             ResultSet rs = pst.executeQuery();
             while(rs.next()){
                 int id = rs.getInt("id");
-                String title = rs.getString("title");
-                String artist = rs.getString("artist");
+                String name = rs.getString("name");
                 String category = rs.getString("category");
-                int time = rs.getInt("time");
+                int time = rs.getInt("duration");
                 String path = rs.getString("path");
-                songs.add(new Song(id, title, artist, category, time, path));
+                movies.add(new Movie(id, name, time, path));
             }
-            return songs;
+            return movies;
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
@@ -51,7 +49,7 @@ public class SongsAccessObject {
         }
     }
 
-    public void editSong(String title, String artist, String category, Song obj) {
+    public void editSong(String title, String artist, String category, Movie obj) {
         try(Connection con = ConnectionManager.getConnection()){
             String sqlPrompt = "Update songs Set title=?, artist=?, category=? where id=?";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
@@ -66,7 +64,7 @@ public class SongsAccessObject {
         }
     }
 
-    public void deleteSong(Song song) {
+    public void deleteSong(Movie song) {
         try (Connection con = ConnectionManager.getConnection()) {
             String sqlRel = "DELETE FROM playlist_songs WHERE song_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);

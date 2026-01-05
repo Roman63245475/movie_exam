@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_tunes.gui.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_tunes.gui.MainController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
@@ -88,10 +88,8 @@
                         <Label styleClass="header-label" text="ALL SONGS" />
                         <TableView fx:id="songsTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="songTitle" prefWidth="100.0" text="Title" />
-                                <TableColumn fx:id="songArtist" prefWidth="100.0" text="Artist" />
-                                <TableColumn fx:id="songCategory" prefWidth="75.0" text="Category" />
-                                <TableColumn fx:id="songDuration" prefWidth="60.0" text="Time" />
+                                <TableColumn fx:id="movieTitle" prefWidth="100.0" text="Title" />
+                                <TableColumn fx:id="movieDuration" prefWidth="60.0" text="Time" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -154,7 +152,7 @@
                     </padding>
                 </HBox>
 
-                <Button mnemonicParsing="false" text="Close" onAction="#onCloseClick">
+                <Button mnemonicParsing="false" onAction="#onCloseClick" text="Close">
                     <HBox.margin>
                         <Insets right="30.0" />
                     </HBox.margin>

@@ -1,6 +1,6 @@
 package easv.my_tunes.gui;
 
-import easv.my_tunes.be.Playlist;
+import easv.my_tunes.be.Category;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -13,7 +13,7 @@ public class AddNewPlayListController implements OtherWindow {
     @FXML
     private TextField nameField;
 
-    private Playlist obj;
+    private Category obj;
 
     @FXML
     private void onCancelButton(){
@@ -22,7 +22,7 @@ public class AddNewPlayListController implements OtherWindow {
     }
 
     public void getObject(Object obj){
-        this.obj = (Playlist) obj;
+        this.obj = (Category) obj;
     }
 
     public void getType(String type) {

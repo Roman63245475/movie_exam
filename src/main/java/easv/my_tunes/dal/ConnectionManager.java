@@ -10,7 +10,7 @@ public class ConnectionManager {
     public static Connection getConnection() throws SQLServerException {
         SQLServerDataSource ds;
         ds = new SQLServerDataSource();
-        ds.setDatabaseName("my_tunes_db"); // make this unique as names are shared on server
+        ds.setDatabaseName("movie_db"); // make this unique as names are shared on server
         ds.setUser("xxx"); // Use your own username
         ds.setPassword("xxx"); // Use your own password
         ds.setServerName("10.176.111.34");

@@ -3,19 +3,19 @@ package easv.my_tunes.be;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Playlist {
+public class Category {
     private int id;
     private String name;
-    private List<Song> songs;
+    private List<Movie> movies;
 
-    public Playlist(int id, String name) {
+    public Category(int id, String name) {
         this.id = id;
         this.name = name;
-        this.songs = new ArrayList<>();
+        this.movies = new ArrayList<>();
     }
 
-    public void addSong(Song song) {
-        songs.add(song);
+    public void addMovie(Movie movie) {
+        movies.add(movie);
     }
 
     public int getID() {
@@ -26,12 +26,12 @@ public class Playlist {
         return name;
     }
 
-    public int getSongs(){
-        return songs.size();
+    public int getMovies(){
+        return movies.size();
     }
     public String getTime(){
         int time = 0;
-        for (Song song : songs){
+        for (Movie song : movies){
             time += song.getTimeInt();
         }
         int hour = time / 3600;
@@ -40,7 +40,7 @@ public class Playlist {
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
-    public List<Song> getSongsList(){
-        return songs;
+    public List<Movie> getSongsList(){
+        return movies;
     }
 }
