@@ -25,7 +25,7 @@
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.6</version>
         </dependency>
-        
+
         <!-- MP3 metadata reading -->
         <dependency>
             <groupId>org</groupId>

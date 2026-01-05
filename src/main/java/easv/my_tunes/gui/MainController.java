@@ -98,6 +98,11 @@ public class MainController implements Initializable {
 
     private boolean flag;
 
+    @FXML
+    private void onCloseClick(){
+        return;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //setupVolumeSwipeGesture();
