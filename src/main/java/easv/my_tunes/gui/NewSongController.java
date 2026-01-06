@@ -1,9 +1,12 @@
 package easv.my_tunes.gui;
 
 import easv.my_tunes.be.Movie;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -23,59 +26,62 @@ import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 public class NewSongController implements Initializable, OtherWindow {
-    
+
     @FXML
     private TextField titleField;
 
     private String type;
-    
+
     @FXML
     private TextField artistField;
-    
+
     @FXML
     private ComboBox<String> categoryComboBox;
 
     private MainController mainController;
-    
+
     @FXML
     private Button moreButton;
-    
+
     @FXML
     private TextField timeField;
-    
+
     @FXML
     private TextField filePathField;
-    
+
     @FXML
     private Button chooseFileButton;
-    
+
     @FXML
     private Button saveButton;
 
     private Movie obj;
-    
+
     @FXML
     private Button cancelButton;
-    
+
+    private MediaPlayer durationPlayer;
+
+
     private File selectedFile;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         return;
     }
-    
+
     @FXML
     private void onChooseFileClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose MP4 or mpeg4 File");
-        
+
         FileChooser.ExtensionFilter mp3Filter =
-            new FileChooser.ExtensionFilter("MP3 Files (*.mp3)", "*.mp4");
+                new FileChooser.ExtensionFilter("MP4 Files (*.mp4)", "*.mp4");
         fileChooser.getExtensionFilters().add(mp3Filter);
-        
+
         Stage stage = (Stage) chooseFileButton.getScene().getWindow();
         selectedFile = fileChooser.showOpenDialog(stage);
-        
+
         if (selectedFile != null) {
             filePathField.setText(selectedFile.getName());
             calculateAndSetDuration();
@@ -110,23 +116,34 @@ public class NewSongController implements Initializable, OtherWindow {
     public void getMainController(MainController controller){
         this.mainController = controller;
     }
-    
+
     private void calculateAndSetDuration() {
         if (selectedFile == null) {
             return;
         }
-        
+
         try {
             File file = selectedFile;
-            
-            int durationInSeconds = 111;
-            
-            int minutes = durationInSeconds / 60;
-            int seconds = durationInSeconds % 60;
-            
-            String duration = String.format("%d:%02d", minutes, seconds);
-            timeField.setText(duration);
-            
+
+            Media media = new Media(selectedFile.toURI().toString());
+            durationPlayer = new MediaPlayer(media);
+
+            durationPlayer.setOnReady(() -> {
+                int durationInSeconds = (int) durationPlayer.getTotalDuration().toSeconds();
+
+                int minutes = durationInSeconds / 60;
+                int seconds = durationInSeconds % 60;
+
+                String duration = String.format("%d:%02d", minutes, seconds);
+
+                Platform.runLater(() -> timeField.setText(duration));
+
+                // ⛔ сначала остановка, потом dispose
+                durationPlayer.stop();
+                durationPlayer.dispose();
+                durationPlayer = null;
+            });
+            durationPlayer.play();
         } catch (Exception e) {
             System.err.println("Error reading MP3 file duration: " + e.getMessage());
             e.printStackTrace();
@@ -134,7 +151,7 @@ public class NewSongController implements Initializable, OtherWindow {
         }
     }
 
-    
+
     @FXML
     private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
         if (titleField.getText().trim().isEmpty()) {
@@ -142,16 +159,16 @@ public class NewSongController implements Initializable, OtherWindow {
             return;
         }
 
-        
+
         if (selectedFile == null && type.equals("New")) {
-            showAlert("Validation Error", "Please choose an MP3 file.");
+            showAlert("Validation Error", "Please choose an MP4 or mpeg4 file.");
             return;
         }
 
+
         if (type.equals("New")) {
-            //AudioFile audioFile = AudioFileIO.read(selectedFile);
-            //AudioHeader audioHeader = audioFile.getAudioHeader();
-            int durationInSeconds = 111;
+            Media media = new Media(selectedFile.toURI().toString());
+            int durationInSeconds = (int) media.getDuration().toSeconds();
             mainController.getNewSongData(titleField.getText(), durationInSeconds, selectedFile);
             closeWindow();
         }
@@ -162,21 +179,21 @@ public class NewSongController implements Initializable, OtherWindow {
     }
 
     private void fillFields() {
-        titleField.setText(obj.getTitle());
+        titleField.setText(obj.getName());
         timeField.setText(obj.getTime());
         filePathField.setText(obj.getPath());
     }
-    
+
     @FXML
     private void onCancelClick() {
         closeWindow();
     }
-    
+
     private void closeWindow() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
-    
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -185,3 +202,4 @@ public class NewSongController implements Initializable, OtherWindow {
         alert.showAndWait();
     }
 }
+

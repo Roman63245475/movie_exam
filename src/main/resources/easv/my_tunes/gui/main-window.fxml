@@ -14,12 +14,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_tunes.gui.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_tunes.gui.MainController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Label styleClass="header-label" text="MyMovies ▶" />
+                <Label styleClass="header-label" text="MyMovies ▶️" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label text="Filter:" />
                 <TextField fx:id="filterTextField" promptText="Search movie..." />
@@ -39,7 +39,7 @@
                         <Label styleClass="header-label" text="CATEGORY" />
                         <TableView fx:id="CategoriesTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="playListName" prefWidth="100.0" text="Name" />
+                                <TableColumn fx:id="categoryName" prefWidth="100.0" text="Name" />
                                 <TableColumn fx:id="moviesAmount" prefWidth="70.0" text="Amount" />
                             </columns>
                             <columnResizePolicy>
@@ -61,6 +61,7 @@
                         <Insets left="10.0" right="5.0" />
                     </padding>
                 </VBox>
+
 
                 <VBox spacing="10.0">
                     <children>
@@ -96,7 +97,7 @@
                         </TableView>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#addSongToPlaylist" text="⬅ Add to Catergory" />
+                                <Button mnemonicParsing="false" onAction="#addSongToPlaylist" text="⬅️ Add to Catergory" />
                                 <Region HBox.hgrow="ALWAYS" />
                                 <Button fx:id="newSongButton" mnemonicParsing="false" onAction="#onNewOrEditSongClick" styleClass="action-button" text="New" />
                                 <Button fx:id="EditSongButton" mnemonicParsing="false" onAction="#onNewOrEditSongClick" text="Edit" />
@@ -135,9 +136,10 @@
 
                 <Region HBox.hgrow="ALWAYS" />
 
-                <Button mnemonicParsing="false" onAction="#previousSong" styleClass="media-button" text="⏮" />
-                <Button fx:id="controlButton" mnemonicParsing="false" onAction="#continueOrStop" styleClass="media-button, play-button" text="▶" />
-                <Button mnemonicParsing="false" onAction="#nextSong" styleClass="media-button" text="⏭" />
+
+                <Button mnemonicParsing="false" onAction="#previousSong" styleClass="media-button" text="⏮️" />
+                <Button fx:id="controlButton" mnemonicParsing="false" onAction="#continueOrStop" styleClass="media-button, play-button" text="▶️" />
+                <Button mnemonicParsing="false" onAction="#nextSong" styleClass="media-button" text="⏭️" />
 
                 <Region HBox.hgrow="ALWAYS" />
 

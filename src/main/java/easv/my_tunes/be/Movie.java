@@ -30,7 +30,7 @@ public class Movie {
         return id;
     }
 
-    public String getTitle(){
+    public String getName(){
         return name;
     }
     public String getTime() {

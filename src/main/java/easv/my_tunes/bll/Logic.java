@@ -39,8 +39,8 @@ public class Logic {
         songsAccessObject.saveSong(title, time, targetPath);
     }
 
-    public void savePlayList(String name){
-        playListAccessObject.savePlayList(name);
+    public void saveCategory(String name){
+        playListAccessObject.saveCategory(name);
     }
 
     public void editPlaylist(String name, Category obj){
@@ -123,6 +123,8 @@ public class Logic {
         playListAccessObject.deletePlaylist(playlist);
     }
 
+
+
     private Path createFile(File file) {
         Path dirPath = Path.of("src/main/resources/easv/my_tunes/movies");
         dirPath.toFile().mkdirs();
@@ -173,3 +175,4 @@ public class Logic {
         return playLists_songs_AccessObject.getSongsOnPlaylist(playlist);
     }
 }
+

@@ -53,9 +53,9 @@ public class CategoriesAccessObject {
         }
     }
 
-    public void savePlayList(String name){
+    public void saveCategory(String name){
         try (Connection con = ConnectionManager.getConnection()){
-            String sqlPrompt = "Insert Into playlists (name) VALUES (?)";
+            String sqlPrompt = "Insert Into category_table (name) VALUES (?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setString(1, name);
             ps.execute();

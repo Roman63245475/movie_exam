@@ -26,7 +26,7 @@ public class Category {
         return name;
     }
 
-    public int getMovies(){
+    public int getAmount(){
         return movies.size();
     }
     public String getTime(){
