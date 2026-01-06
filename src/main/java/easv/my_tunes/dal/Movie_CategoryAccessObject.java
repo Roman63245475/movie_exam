@@ -3,6 +3,7 @@ package easv.my_tunes.dal;
 import easv.my_tunes.be.Category;
 import easv.my_tunes.be.Movie;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Movie_CategoryAccessObject {
+    private static ConnectionManager cm;
+
+    static {
+        try {
+            cm = new ConnectionManager();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void addSongToPlaylist(Category playlist, Movie song) {
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "Insert Into playlist_songs (playlist_id, song_id) VALUES (?, ?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, playlist.getID());
@@ -26,7 +36,7 @@ public class Movie_CategoryAccessObject {
     }
 
     public void deleteSong(Movie song, Category playlist) {
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "delete from playlist_songs where id=?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, song.getPlaylist_song_id());
@@ -39,7 +49,7 @@ public class Movie_CategoryAccessObject {
 
     public List<Movie> getSongsOnPlaylist(Category playlist) {
         List<Movie> movies = new ArrayList<>();
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "select movie_category.id as field_id, movie_table.id as movie_id, movie_table.name as movie_name, movie_table.duration as movie_time, movie_table.path as movie_path from movie_category INNER JOIN movie_table on movie_category.movie_id = movie_table.id where movie_category.category_id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, playlist.getID());

@@ -461,7 +461,7 @@ public class MainController implements Initializable {
 
     }
 
-    public void getEditPlaylistData(Category obj, String name) {
+    public void getEditPlaylistData(Category obj, String name) throws IOException {
         logic.editPlaylist(name, obj);
         displayCategories(logic.loadCategories());
     }

@@ -43,7 +43,7 @@ public class Logic {
         playListAccessObject.saveCategory(name);
     }
 
-    public void editPlaylist(String name, Category obj){
+    public void editPlaylist(String name, Category obj) throws IOException {
         playListAccessObject.editPlaylist(name, obj);
     }
 

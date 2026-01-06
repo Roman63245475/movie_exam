@@ -2,6 +2,7 @@ package easv.my_tunes.dal;
 
 import easv.my_tunes.be.Movie;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAccessObject {
+    private static ConnectionManager cm;
+
+    static {
+        try {
+            cm = new ConnectionManager();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public List<Movie> getMovies(){
         List<Movie> movies = new ArrayList<>();
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "SELECT * FROM movie_table";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             ResultSet rs = pst.executeQuery();
@@ -33,7 +43,7 @@ public class MoviesAccessObject {
     }
 
     public void saveSong(String title, int time, Path targetPath) {
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "Insert Into movie_table (name, duration, path) VALUES (?,?,?)";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             pst.setString(1, title);
@@ -47,7 +57,7 @@ public class MoviesAccessObject {
     }
 
     public void editSong(String title, String artist, String category, Movie obj) {
-        try(Connection con = ConnectionManager.getConnection()){
+        try(Connection con = cm.getConnection()){
             String sqlPrompt = "Update songs Set title=?, artist=?, category=? where id=?";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             pst.setString(1, title);
@@ -62,7 +72,7 @@ public class MoviesAccessObject {
     }
 
     public void deleteSong(Movie song) {
-        try (Connection con = ConnectionManager.getConnection()) {
+        try (Connection con = cm.getConnection()) {
             String sqlRel = "DELETE FROM playlist_songs WHERE song_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);
             psRel.setInt(1, song.getID());

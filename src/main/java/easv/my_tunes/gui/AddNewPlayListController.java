@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class AddNewPlayListController implements OtherWindow {
 
     private MainController mainController;
@@ -30,7 +32,7 @@ public class AddNewPlayListController implements OtherWindow {
     }
 
     @FXML
-    private void onSaveButton(){
+    private void onSaveButton() throws IOException {
         String name = nameField.getText();
         if (!name.trim().isEmpty()){
             if (type.equals("New")){

@@ -3,6 +3,7 @@ package easv.my_tunes.dal;
 import easv.my_tunes.be.Category;
 import easv.my_tunes.be.Movie;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,10 +13,20 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesAccessObject {
+    private static ConnectionManager cm;
+
+    static {
+        try {
+            cm = new ConnectionManager();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public List<Category> getCategories() {
         HashMap<Integer, Category> categories = new HashMap<>();
-        try (Connection con = ConnectionManager.getConnection()) {
+        try (Connection con = cm.getConnection()) {
             String sqlPrompt = "SELECT category_table.id AS category_id, category_table.name AS category_name, " +
                     "movie_category.movie_id AS movie_id, movie_table.name AS movie_name, " +
                     "movie_table.duration AS movie_time, movie_table.path AS movie_path " +
@@ -54,7 +65,7 @@ public class CategoriesAccessObject {
     }
 
     public void saveCategory(String name){
-        try (Connection con = ConnectionManager.getConnection()){
+        try (Connection con = cm.getConnection()){
             String sqlPrompt = "Insert Into category_table (name) VALUES (?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setString(1, name);
@@ -65,8 +76,9 @@ public class CategoriesAccessObject {
         }
     }
 
-    public void editPlaylist(String name, Category obj) {
-        try(Connection con = ConnectionManager.getConnection()){
+    public void editPlaylist(String name, Category obj) throws IOException {
+        cm = new ConnectionManager();
+        try(Connection con = cm.getConnection()){
             String sqlPrompt =  "Update playlists set name = ? where id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setString(1, name);
@@ -78,7 +90,7 @@ public class CategoriesAccessObject {
         }
     }
     public void deletePlaylist(Category playlist) {
-        try (Connection con = ConnectionManager.getConnection()) {
+        try (Connection con = cm.getConnection()) {
             String sqlRel = "DELETE FROM playlist_songs WHERE playlist_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);
             psRel.setInt(1, playlist.getID());
