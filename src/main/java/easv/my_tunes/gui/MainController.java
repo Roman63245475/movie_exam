@@ -41,6 +41,9 @@ public class MainController implements Initializable {
     private TableView<Movie> moviesTable;
 
     @FXML
+    private TableColumn<Movie, Integer> ratingColumn;
+
+    @FXML
     private TableColumn<Movie, String> movieTitle;
 
     @FXML
@@ -430,7 +433,7 @@ public class MainController implements Initializable {
 
         movieTitle.setCellValueFactory(new PropertyValueFactory<>("name"));
         movieDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
-
+        ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
         moviesTable.setItems(sortedData);
     }
 
@@ -443,8 +446,8 @@ public class MainController implements Initializable {
     }
 
 
-    public void getNewSongData(String title, int time, File file) {
-        logic.saveSong(title, time, file);
+    public void getNewSongData(String title, int time, int rating, File file) {
+        logic.saveSong(title, time, rating, file);
         displayMovies(logic.loadMovies());
     }
 

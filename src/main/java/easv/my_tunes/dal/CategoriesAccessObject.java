@@ -53,7 +53,8 @@ public class CategoriesAccessObject {
                             movieId,
                             rs.getString("movie_name"),
                             rs.getInt("movie_time"),
-                            rs.getString("movie_path")
+                            rs.getString("movie_path"),
+                            rs.getInt("rating")
                     );
                     category.addMovie(movie);
                 }

@@ -34,9 +34,9 @@ public class Logic {
         return playListAccessObject.getCategories();
     }
 
-    public void saveSong(String title, int time, File file) {
+    public void saveSong(String title, int time, int rating, File file) {
         Path targetPath = createFile(file);
-        songsAccessObject.saveSong(title, time, targetPath);
+        songsAccessObject.saveSong(title, time, rating, targetPath);
     }
 
     public void saveCategory(String name){

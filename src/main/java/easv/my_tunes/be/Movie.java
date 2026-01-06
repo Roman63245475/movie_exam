@@ -6,8 +6,9 @@ public class Movie {
     private int time;
     private String path;
     private int movie_category_id;
+    private int rating;
 
-    public Movie(int id, String name, int time, String path, int movie_category_id) {
+    public Movie(int id, String name, int time, String path, int movie_category_id, String empty) {
         this.id = id;
         this.name = name;
         this.time = time;
@@ -18,12 +19,16 @@ public class Movie {
     public int getPlaylist_song_id() {
         return movie_category_id;
     }
+    public int getRating(){
+        return this.rating;
+    }
 
-    public Movie(int id, String name, int time, String path) {
+    public Movie(int id, String name, int time, String path, int rating) {
         this.id = id;
         this.name = name;
         this.time = time;
         this.path = path;
+        this.rating = rating;
     }
 
     public int getID() {

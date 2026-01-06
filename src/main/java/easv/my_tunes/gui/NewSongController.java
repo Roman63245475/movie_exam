@@ -36,6 +36,9 @@ public class NewSongController implements Initializable, OtherWindow {
     private TextField artistField;
 
     @FXML
+    private TextField ratingField;
+
+    @FXML
     private ComboBox<String> categoryComboBox;
 
     private MainController mainController;
@@ -61,6 +64,8 @@ public class NewSongController implements Initializable, OtherWindow {
     private Button cancelButton;
 
     private MediaPlayer durationPlayer;
+
+    private int duration;
 
 
     private File selectedFile;
@@ -130,7 +135,7 @@ public class NewSongController implements Initializable, OtherWindow {
 
             durationPlayer.setOnReady(() -> {
                 int durationInSeconds = (int) durationPlayer.getTotalDuration().toSeconds();
-
+                duration = durationInSeconds;
                 int minutes = durationInSeconds / 60;
                 int seconds = durationInSeconds % 60;
 
@@ -154,8 +159,25 @@ public class NewSongController implements Initializable, OtherWindow {
 
     @FXML
     private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
+        Integer rating;
         if (titleField.getText().trim().isEmpty()) {
             showAlert("Validation Error", "Please enter a title.");
+            return;
+        }
+
+        if (ratingField.getText().trim().isEmpty()) {
+            showAlert("Validation Error", "Please enter a rating");
+            return;
+        }
+        try{
+            rating = Integer.parseInt(ratingField.getText());
+            if (rating < 0 || rating > 10) {
+                showAlert("Validation Error", "Rating must be between 0 and 10");
+                return;
+            }
+        }
+        catch (NumberFormatException e){
+            showAlert("Validation Error", "Rating must be an integer");
             return;
         }
 
@@ -169,7 +191,7 @@ public class NewSongController implements Initializable, OtherWindow {
         if (type.equals("New")) {
             Media media = new Media(selectedFile.toURI().toString());
             int durationInSeconds = (int) media.getDuration().toSeconds();
-            mainController.getNewSongData(titleField.getText(), durationInSeconds, selectedFile);
+            mainController.getNewSongData(titleField.getText(), this.duration, rating, selectedFile);
             closeWindow();
         }
         else {
