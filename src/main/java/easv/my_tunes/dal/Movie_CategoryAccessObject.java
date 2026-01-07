@@ -24,7 +24,7 @@ public class Movie_CategoryAccessObject {
 
     public void addSongToPlaylist(Category playlist, Movie song) {
         try (Connection con = cm.getConnection()){
-            String sqlPrompt = "Insert Into playlist_songs (playlist_id, song_id) VALUES (?, ?)";
+            String sqlPrompt = "Insert Into movie_category (category_id, movie_id) VALUES (?, ?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, playlist.getID());
             ps.setInt(2, song.getID());

@@ -29,7 +29,7 @@ public class CategoriesAccessObject {
         try (Connection con = cm.getConnection()) {
             String sqlPrompt = "SELECT category_table.id AS category_id, category_table.name AS category_name, " +
                     "movie_category.movie_id AS movie_id, movie_table.name AS movie_name, " +
-                    "movie_table.duration AS movie_time, movie_table.path AS movie_path " +
+                    "movie_table.duration AS movie_time, movie_table.path AS movie_path, movie_table.rating AS movie_rating " +
                     "FROM category_table " +
                     "LEFT JOIN movie_category ON category_table.id = movie_category.category_id " +
                     "LEFT JOIN movie_table ON movie_category.movie_id = movie_table.id";
@@ -54,7 +54,7 @@ public class CategoriesAccessObject {
                             rs.getString("movie_name"),
                             rs.getInt("movie_time"),
                             rs.getString("movie_path"),
-                            rs.getInt("rating")
+                            rs.getInt("movie_rating")
                     );
                     category.addMovie(movie);
                 }
