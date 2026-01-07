@@ -372,13 +372,13 @@ public class MainController implements Initializable {
     @FXML
     private void deleteSongFomPlaylist() {
 
-        Movie song = moviesInCategoryList.getSelectionModel().getSelectedItem();
+        Movie movie = moviesInCategoryList.getSelectionModel().getSelectedItem();
         //Playlist playlist = CategoriesTable.getSelectionModel().getSelectedItem();
-        if (song != null && selected_playlist != null) {
+        if (movie != null && selected_playlist != null) {
             player.stop();
             player = null;
             int id = selected_playlist.getID();
-            logic.deleteSongFromPlaylist(song, selected_playlist);
+            logic.deleteSongFromPlaylist(movie, selected_playlist);
             List<Category> playlists = logic.loadCategories();
             displayCategories(playlists);
             for (Category playlst : playlists) {
@@ -471,12 +471,12 @@ public class MainController implements Initializable {
     private void onDeleteSongClick() {
         Movie selectedSong = moviesTable.getSelectionModel().getSelectedItem();
 
-        if (selectedSong != null && player != null && lblCurrentSong.getText().contains(selectedSong.getName())) {
-            player.stop();
-            player.dispose();
-            player = null;
-            lblCurrentSong.setText("-");
-        }
+//        if (selectedSong != null && player != null && lblCurrentSong.getText().contains(selectedSong.getName())) {
+//            player.stop();
+//            player.dispose();
+//            player = null;
+//            lblCurrentSong.setText("-");
+//        }
 
         if (selectedSong != null) {
             //Platform.runLater(() -> logic.deleteSong(selectedSong));

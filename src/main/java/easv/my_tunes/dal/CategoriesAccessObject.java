@@ -92,12 +92,12 @@ public class CategoriesAccessObject {
     }
     public void deletePlaylist(Category playlist) {
         try (Connection con = cm.getConnection()) {
-            String sqlRel = "DELETE FROM playlist_songs WHERE playlist_id = ?";
+            String sqlRel = "DELETE FROM movie_category WHERE category_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);
             psRel.setInt(1, playlist.getID());
             psRel.execute();
 
-            String sql = "DELETE FROM playlists WHERE id = ?";
+            String sql = "DELETE FROM category_table WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, playlist.getID());
             ps.execute();

@@ -37,7 +37,7 @@ public class Movie_CategoryAccessObject {
 
     public void deleteSong(Movie song, Category playlist) {
         try (Connection con = cm.getConnection()){
-            String sqlPrompt = "delete from playlist_songs where id=?";
+            String sqlPrompt = "delete from movie_category where id=?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, song.getPlaylist_song_id());
             ps.execute();
