@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -90,7 +91,6 @@ public class MainController implements Initializable {
     private Label lblCurrentSong;
 
     private FilteredList<Movie> filteredSongs;
-
     private boolean flag;
 
     @FXML
@@ -121,9 +121,8 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 flag = true;
                 moviesInCategoryList.getSelectionModel().clearSelection();
-                //Media media = new Media(new File(newValue.getPath()).toURI().toString());
-                //player = new MediaPlayer(media);
-                playMusic(newValue);
+                Media media = new Media(new File(newValue.getPath()).toURI().toString());
+                player = new MediaPlayer(media);
             }
         });
     }
@@ -133,7 +132,8 @@ public class MainController implements Initializable {
             if (newValue != null) {
                 flag = false;
                 moviesTable.getSelectionModel().clearSelection();
-                playMusic(newValue);
+                Media media = new Media(new File(newValue.getPath()).toURI().toString());
+                player = new MediaPlayer(media);
             }
         });
     }
@@ -156,32 +156,24 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void playMusic(Movie movie) {
+    private void playMusic(MediaPlayer player) {
         try{
-            String path = movie.getPath().replace("\\", "/");
-            Media media = new Media(Paths.get(movie.getPath()).toUri().toString());
-            player = new MediaPlayer(media);
-            MediaView mediaView = new MediaView(player);
-            Stage videoStage = new Stage();
-            videoStage.setTitle(movie.getName());
-            StackPane root = new StackPane();
-            root.getChildren().add(mediaView);
-            videoStage.setScene(new Scene(root, 800, 600));
-            videoStage.show();
-            player.play();
-            videoStage.setOnCloseRequest(event -> {
-                if (player != null) {
-                    player.stop();
-                    player.dispose();   // ОБЯЗАТЕЛЬНО
-                    player = null;
-                }
-            });
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("player-view.fxml"));
+            Parent root = loader.load();
+            PlayerController controller = loader.getController();
+            controller.updateMoviesList(moviesTable.getItems());
+            controller.setVideo(player);
+            Scene s = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Kalivan Player");
+            stage.setScene(s);
+            stage.show();
 
-            player.setOnError(() ->
-                    System.out.println("Ошибка: " + player.getError().getMessage()));
-        }
-        catch (Exception e){
-            e.printStackTrace();
+            stage.setOnCloseRequest(e -> {
+                controller.shutdown();
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -218,14 +210,7 @@ public class MainController implements Initializable {
     @FXML
     private void continueOrStop() {
         if (player != null) {
-            if (controlButton.getText().equals("| |")) {
-                controlButton.setText("▶️");
-                player.pause();
-            }
-            else {
-                controlButton.setText("| |");
-                player.play();
-            }
+            playMusic(player);
         }
     }
 
@@ -250,6 +235,8 @@ public class MainController implements Initializable {
                 moviesTable.getSelectionModel().select(index);
                 selectedSong = moviesTable.getSelectionModel().getSelectedItem();
             }
+            Media media = new Media(new File(selectedSong.getPath()).toURI().toString());
+            player = new MediaPlayer(media);
         }
         else{
             int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
@@ -264,9 +251,11 @@ public class MainController implements Initializable {
                 moviesInCategoryList.getSelectionModel().select(index);
                 selectedSong = moviesInCategoryList.getSelectionModel().getSelectedItem();
             }
+            Media media = new Media(new File(selectedSong.getPath()).toURI().toString());
+            player = new MediaPlayer(media);
         }
 
-        playMusic(selectedSong);
+        playMusic(player);
     }
 
     @FXML
@@ -284,6 +273,8 @@ public class MainController implements Initializable {
                 moviesTable.getSelectionModel().select(index);
                 selectedSong = moviesTable.getSelectionModel().getSelectedItem();
             }
+            Media media = new Media(new File(selectedSong.getPath()).toURI().toString());
+            player = new MediaPlayer(media);
         }
         else{
             int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
@@ -297,9 +288,11 @@ public class MainController implements Initializable {
                 moviesInCategoryList.getSelectionModel().select(index);
                 selectedSong = moviesInCategoryList.getSelectionModel().getSelectedItem();
             }
+            Media media = new Media(new File(selectedSong.getPath()).toURI().toString());
+            player = new MediaPlayer(media);
         }
 
-        playMusic(selectedSong);
+        playMusic(player);
     }
 
     @FXML
