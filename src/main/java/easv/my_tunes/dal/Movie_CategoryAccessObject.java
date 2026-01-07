@@ -24,10 +24,10 @@ public class Movie_CategoryAccessObject {
 
     public void addSongToPlaylist(Category playlist, Movie song) {
         try (Connection con = cm.getConnection()){
-            String sqlPrompt = "Insert Into movie_category (category_id, movie_id) VALUES (?, ?)";
+            String sqlPrompt = "Insert Into movie_category (movie_id, category_id) VALUES (?, ?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
-            ps.setInt(1, playlist.getID());
-            ps.setInt(2, song.getID());
+            ps.setInt(1, song.getID());
+            ps.setInt(2, playlist.getID());
             ps.execute();
         }
         catch (SQLException e){
@@ -60,7 +60,7 @@ public class Movie_CategoryAccessObject {
                 String movieName = rs.getString("movie_name");
                 int movie_time = rs.getInt("movie_time");
                 String movie_path = rs.getString("movie_path");
-                movies.add(new Movie(movie_id, movieName, movie_time, movie_path, field_id));
+                movies.add(new Movie(movie_id, movieName, movie_time, movie_path, field_id, ""));
             }
             return movies;
         }

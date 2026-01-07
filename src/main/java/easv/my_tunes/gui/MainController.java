@@ -360,13 +360,13 @@ public class MainController implements Initializable {
 
     @FXML
     private void addSongToPlaylist() {
-        Movie song = moviesTable.getSelectionModel().getSelectedItem();
-        Category playlist = CategoriesTable.getSelectionModel().getSelectedItem();
-        if (song != null && playlist != null) {
-            logic.addSongToPlaylist(playlist, song);
+        Movie movie = moviesTable.getSelectionModel().getSelectedItem();
+        Category category = CategoriesTable.getSelectionModel().getSelectedItem();
+        if (movie != null && category != null) {
+            logic.addSongToPlaylist(category, movie);
         }
         displayCategories(logic.loadCategories());
-        displaySongsInPlaylist(playlist);
+        displaySongsInPlaylist(category);
     }
 
     @FXML
