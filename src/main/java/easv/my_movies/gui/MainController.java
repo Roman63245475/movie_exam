@@ -61,9 +61,6 @@ public class MainController implements Initializable {
     private TableColumn<Category, Integer> moviesAmount;
 
     @FXML
-    private Slider volumeSlider;
-
-    @FXML
     private TextField filterTextField;
 
     private Logic logic;
@@ -79,7 +76,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //setupVolumeSwipeGesture();
         this.logic = new Logic();
         moviesTable.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> moviesTable.requestFocus());
         CategoriesTable.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> CategoriesTable.requestFocus());
@@ -90,9 +86,6 @@ public class MainController implements Initializable {
         setActionOnSelectedItemTableView();
         setActionOnSelectedItemListView();
         setActionOnSelectedItemTableViewMovies();
-        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            setupVolumeSwipeGesture(newValue.doubleValue());
-        });
     }
 
     private void setActionOnSelectedItemTableViewMovies() {
@@ -149,128 +142,23 @@ public class MainController implements Initializable {
 
             stage.setOnCloseRequest(e -> {
                 controller.shutdown();
+                moviesTable.getSelectionModel().clearSelection();
+                nullPlayer();
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void newVideoWindow(){
-
+    private void nullPlayer(){
+        player = null;
     }
-    //        File file = new File(path);
-//
-//        if (file.exists()) {
-//            if (lblCurrentMovie != null) {
-//                lblCurrentMovie.setText(Movie.getTitle() + " - " + Movie.getArtist());
-//            }
-//
-//            String uriString = file.toURI().toString();
-//            Media media = new Media(uriString);
-//
-//            if (player != null) {
-//                player.stop();
-//            }
-//
-//            player = new MediaPlayer(media);
-//            player.setOnEndOfMedia(this::nextMovie);
-//            player.play();
-//            controlButton.setText("| |");
-//
-//            if (volumeSlider != null) {
-//                player.setVolume(volumeSlider.getValue() / 100.0);
-//            }
-//        } else {
-//            System.out.println("Soubor nebyl nalezen: " + path);
-//        }
-    //  return;
 
     @FXML
-    private void continueOrStop() {
+    private void launchVideo() {
         if (player != null) {
             playMovie(player);
         }
-    }
-
-    @FXML
-    private void nextMovie(){
-        if (flag && moviesTable.getItems().isEmpty()) return;
-        if (!flag && moviesInCategoryList.getItems().isEmpty()) return;
-
-        Movie selectedMovie;
-
-
-        if (flag){
-            int index = moviesTable.getSelectionModel().getSelectedIndex();
-            //Movie selectedMovie;
-            if (index < moviesTable.getItems().size() - 1) {
-                index++;
-                moviesTable.getSelectionModel().select(index);
-                selectedMovie = moviesTable.getSelectionModel().getSelectedItem();
-            }
-            else {
-                index = 0;
-                moviesTable.getSelectionModel().select(index);
-                selectedMovie = moviesTable.getSelectionModel().getSelectedItem();
-            }
-            Media media = new Media(new File(selectedMovie.getPath()).toURI().toString());
-            player = new MediaPlayer(media);
-        }
-        else{
-            int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
-            //Movie selectedMovie;
-            if (index < moviesInCategoryList.getItems().size() - 1) {
-                index++;
-                moviesInCategoryList.getSelectionModel().select(index);
-                selectedMovie = moviesInCategoryList.getSelectionModel().getSelectedItem();
-            }
-            else {
-                index = 0;
-                moviesInCategoryList.getSelectionModel().select(index);
-                selectedMovie = moviesInCategoryList.getSelectionModel().getSelectedItem();
-            }
-            Media media = new Media(new File(selectedMovie.getPath()).toURI().toString());
-            player = new MediaPlayer(media);
-        }
-
-        playMovie(player);
-    }
-
-    @FXML
-    private void previousMovie(){
-        Movie selectedMovie;
-        if (flag){
-            int index = moviesTable.getSelectionModel().getSelectedIndex();
-            if (index > 0) {
-                index--;
-                moviesTable.getSelectionModel().select(index);
-                selectedMovie = moviesTable.getSelectionModel().getSelectedItem();
-            }
-            else {
-                index = moviesTable.getItems().size() - 1;
-                moviesTable.getSelectionModel().select(index);
-                selectedMovie = moviesTable.getSelectionModel().getSelectedItem();
-            }
-            Media media = new Media(new File(selectedMovie.getPath()).toURI().toString());
-            player = new MediaPlayer(media);
-        }
-        else{
-            int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
-            if (index > 0) {
-                index--;
-                moviesInCategoryList.getSelectionModel().select(index);
-                selectedMovie = moviesInCategoryList.getSelectionModel().getSelectedItem();
-            }
-            else {
-                index = moviesInCategoryList.getItems().size() - 1;
-                moviesInCategoryList.getSelectionModel().select(index);
-                selectedMovie = moviesInCategoryList.getSelectionModel().getSelectedItem();
-            }
-            Media media = new Media(new File(selectedMovie.getPath()).toURI().toString());
-            player = new MediaPlayer(media);
-        }
-
-        playMovie(player);
     }
 
     @FXML
@@ -297,8 +185,17 @@ public class MainController implements Initializable {
     @FXML
     private void addNewOrEditCategory(ActionEvent actionEvent) {
         if (player != null) {
-            player.stop();
+            MediaPlayer.Status status = player.getStatus();
+            if (status == MediaPlayer.Status.PLAYING ||
+                    status == MediaPlayer.Status.PAUSED ||
+                    status == MediaPlayer.Status.READY) {
+                player.stop();
+            }
+            player.dispose();
+            player = null;
+            moviesTable.getSelectionModel().clearSelection();
         }
+
         Object source = actionEvent.getSource();
         String actionType = "";
         if (source == EditCategoryButton) {
@@ -362,12 +259,6 @@ public class MainController implements Initializable {
                     CategoriesTable.getSelectionModel().select(playlst);
                 }
             }
-        }
-    }
-
-    private void setupVolumeSwipeGesture(double newvalue) {
-        if (player != null) {
-            player.setVolume(newvalue / 100.0);
         }
     }
 
@@ -468,46 +359,6 @@ public class MainController implements Initializable {
             logic.deleteCategory(selectedCategory);
             displayCategories(logic.loadCategories());
             moviesInCategoryList.getItems().clear();
-        }
-    }
-
-    @FXML
-    private void moveMovieUp() {
-        int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
-        Category currentCategory = CategoriesTable.getSelectionModel().getSelectedItem();
-
-        if (index > 0 && currentCategory != null) {
-            List<Movie> Movies = currentCategory.getMoviesList();
-            Movie temp = Movies.get(index);
-            Movies.set(index, Movies.get(index - 1));
-            Movies.set(index - 1, temp);
-
-            ObservableList<Movie> items = moviesInCategoryList.getItems();
-            Movie item = items.get(index);
-            items.remove(index);
-            items.add(index - 1, item);
-
-            moviesInCategoryList.getSelectionModel().select(index - 1);
-        }
-    }
-
-    @FXML
-    private void moveMovieDown() {
-        int index = moviesInCategoryList.getSelectionModel().getSelectedIndex();
-        Category currentCategory = CategoriesTable.getSelectionModel().getSelectedItem();
-        ObservableList<Movie> items = moviesInCategoryList.getItems();
-
-        if (index >= 0 && index < items.size() - 1 && currentCategory != null) {
-            List<Movie> Movies = currentCategory.getMoviesList();
-            Movie temp = Movies.get(index);
-            Movies.set(index, Movies.get(index + 1));
-            Movies.set(index + 1, temp);
-
-            Movie item = items.get(index);
-            items.remove(index);
-            items.add(index + 1, item);
-
-            moviesInCategoryList.getSelectionModel().select(index + 1);
         }
     }
 }

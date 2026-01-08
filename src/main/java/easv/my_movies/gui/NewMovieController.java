@@ -88,11 +88,6 @@ public class NewMovieController implements Initializable, OtherWindow {
         }
     }
 
-    private void setEditTime(){
-        timeField.setText(obj.getTime());
-        filePathField.setText(obj.getPath());
-    }
-
     public void getMainController(MainController controller){
         this.mainController = controller;
     }
