@@ -58,14 +58,13 @@ public class MoviesAccessObject {
         }
     }
 
-    public void editSong(String title, String artist, String category, Movie obj) {
+    public void editSong(String title, int rating, Movie obj) {
         try(Connection con = cm.getConnection()){
-            String sqlPrompt = "Update songs Set title=?, artist=?, category=? where id=?";
+            String sqlPrompt = "Update movie_table Set name=?, rating=? where id=?";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
             pst.setString(1, title);
-            pst.setString(2, artist);
-            pst.setString(3, category);
-            pst.setInt(4, obj.getID());
+            pst.setInt(2, rating);
+            pst.setInt(3, obj.getID());
             pst.execute();
         }
         catch (SQLException e) {

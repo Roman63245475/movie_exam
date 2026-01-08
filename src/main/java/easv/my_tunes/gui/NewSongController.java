@@ -101,13 +101,13 @@ public class NewSongController implements Initializable, OtherWindow {
     private void checkType() {
         if (type.equals("Edit")) {
             chooseFileButton.setDisable(true);
-            setEditTime();
+            //setEditTime();
         }
     }
 
     public void getObject(Object obj) {
         this.obj = (Movie) obj;
-        if (type == "Edit") {
+        if (type.equals("Edit")) {
             fillFields();
         }
 
@@ -195,7 +195,7 @@ public class NewSongController implements Initializable, OtherWindow {
             closeWindow();
         }
         else {
-            mainController.getEditSongData(titleField.getText(), artistField.getText(), categoryComboBox.getValue(), obj);
+            mainController.getEditSongData(titleField.getText(), rating, obj);
             closeWindow();
         }
     }
@@ -204,6 +204,7 @@ public class NewSongController implements Initializable, OtherWindow {
         titleField.setText(obj.getName());
         timeField.setText(obj.getTime());
         filePathField.setText(obj.getPath());
+        ratingField.setText(String.valueOf(obj.getRating()));
     }
 
     @FXML

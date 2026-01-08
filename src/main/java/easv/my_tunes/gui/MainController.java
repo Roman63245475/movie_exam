@@ -347,8 +347,8 @@ public class MainController implements Initializable {
             stage.setScene(new Scene(loader.load()));
             OtherWindow controller = loader.getController();
             controller.getMainController(this);
-            controller.getObject(obj);
             controller.getType(actionType);
+            controller.getObject(obj);
             stage.setTitle(title);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -446,8 +446,8 @@ public class MainController implements Initializable {
 
 
 
-    public void getEditSongData(String title, String artist, String category, Movie obj) {
-        logic.editSong(title, artist, category,  obj);
+    public void getEditSongData(String title, int rating, Movie obj) {
+        logic.editSong(title, rating,  obj);
         displayMovies(logic.loadMovies());
         String name = obj.getName();
         List<Category> playlists = logic.loadCategories();

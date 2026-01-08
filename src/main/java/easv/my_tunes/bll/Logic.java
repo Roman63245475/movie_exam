@@ -51,10 +51,10 @@ public class Logic {
         playLists_songs_AccessObject.addSongToPlaylist(playlist, song);
     }
 
-    public void editSong(String title, String artist, String category, Movie obj) {
-        obj.setTitle(title);
+    public void editSong(String title, int rating, Movie obj) {
+        //obj.setTitle(title);
         //obj.setTime(time);
-        songsAccessObject.editSong(title, artist, category, obj);
+        songsAccessObject.editSong(title, rating, obj);
     }
 
     public void deleteSong(Movie song) {
