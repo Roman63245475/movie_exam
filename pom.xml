@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>easv</groupId>
-    <artifactId>my_tunes</artifactId>
+    <artifactId>my_movies</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>my_tunes</name>
 
@@ -73,7 +73,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>easv.my_tunes/easv.my_tunes.gui.StartApplication</mainClass>
+                            <mainClass>easv.my_tunes/easv.my_movies.gui.StartApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

@@ -1,4 +1,4 @@
-package easv.my_tunes.be;
+package easv.my_movies.be;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class Category {
     }
     public String getTime(){
         int time = 0;
-        for (Movie song : movies){
-            time += song.getTimeInt();
+        for (Movie Movie : movies){
+            time += Movie.getTimeInt();
         }
         int hour = time / 3600;
         int minute = time % 3600 / 60;
@@ -40,7 +40,7 @@ public class Category {
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
-    public List<Movie> getSongsList(){
+    public List<Movie> getMoviesList(){
         return movies;
     }
 }

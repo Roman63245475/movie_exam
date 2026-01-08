@@ -1,15 +1,13 @@
-package easv.my_tunes.gui;
+package easv.my_movies.gui;
 
-import easv.my_tunes.be.Movie;
+import easv.my_movies.be.Movie;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,10 +16,9 @@ public class PlayerController implements Initializable {
     @FXML private MediaView videoView;
     @FXML private Slider volumeSlider;
     @FXML private Slider videoSlider;
+
     private MediaPlayer player;
-    private Duration duration;
     private List<Movie> movies;
-    private int queue = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -50,20 +47,6 @@ public class PlayerController implements Initializable {
 
     public void updateMoviesList(List<Movie> movies) {
         this.movies = movies;
-    }
-
-    public void playNext(){
-        if (queue < movies.size()){
-            queue++;
-        }else{
-            return;
-        }
-        System.out.println(movies.get(queue));
-    }
-
-    public void playPrevious(){
-        if (queue > 0) queue--;
-        System.out.println(movies.get(queue));
     }
 
     public void shutdown(){

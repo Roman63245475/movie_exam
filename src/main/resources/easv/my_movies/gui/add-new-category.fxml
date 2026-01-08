@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="230.0" prefWidth="322.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_tunes.gui.AddNewPlayListController">
+<AnchorPane prefHeight="230.0" prefWidth="322.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="easv.my_movies.gui.AddNewCategoryController">
    <children>
       <Label layoutX="66.0" layoutY="80.0" text="Name:" />
       <TextField fx:id="nameField" layoutX="108.0" layoutY="76.0" />

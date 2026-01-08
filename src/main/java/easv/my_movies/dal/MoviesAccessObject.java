@@ -1,6 +1,6 @@
-package easv.my_tunes.dal;
+package easv.my_movies.dal;
 
-import easv.my_tunes.be.Movie;
+import easv.my_movies.be.Movie;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,7 +43,7 @@ public class MoviesAccessObject {
         }
     }
 
-    public void saveSong(String title, int time, int rating, Path targetPath) {
+    public void saveMovie(String title, int time, int rating, Path targetPath) {
         try (Connection con = cm.getConnection()){
             String sqlPrompt = "Insert Into movie_table (name, duration, path, rating) VALUES (?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
@@ -58,7 +58,7 @@ public class MoviesAccessObject {
         }
     }
 
-    public void editSong(String title, int rating, Movie obj) {
+    public void editMovie(String title, int rating, Movie obj) {
         try(Connection con = cm.getConnection()){
             String sqlPrompt = "Update movie_table Set name=?, rating=? where id=?";
             PreparedStatement pst = con.prepareStatement(sqlPrompt);
@@ -72,16 +72,16 @@ public class MoviesAccessObject {
         }
     }
 
-    public void deleteSong(Movie song) {
+    public void deleteMovie(Movie movie) {
         try (Connection con = cm.getConnection()) {
             String sqlRel = "DELETE FROM movie_category WHERE movie_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);
-            psRel.setInt(1, song.getID());
+            psRel.setInt(1, movie.getID());
             psRel.execute();
 
             String sql = "DELETE FROM movie_table WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, song.getID());
+            ps.setInt(1, movie.getID());
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

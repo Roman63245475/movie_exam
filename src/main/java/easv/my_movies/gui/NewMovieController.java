@@ -1,6 +1,6 @@
-package easv.my_tunes.gui;
+package easv.my_movies.gui;
 
-import easv.my_tunes.be.Movie;
+import easv.my_movies.be.Movie;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,11 +9,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
@@ -22,29 +17,15 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ResourceBundle;
 
-public class NewSongController implements Initializable, OtherWindow {
+public class NewMovieController implements Initializable, OtherWindow {
 
     @FXML
     private TextField titleField;
 
-    private String type;
-
-    @FXML
-    private TextField artistField;
-
     @FXML
     private TextField ratingField;
-
-    @FXML
-    private ComboBox<String> categoryComboBox;
-
-    private MainController mainController;
-
-    @FXML
-    private Button moreButton;
 
     @FXML
     private TextField timeField;
@@ -56,19 +37,14 @@ public class NewSongController implements Initializable, OtherWindow {
     private Button chooseFileButton;
 
     @FXML
-    private Button saveButton;
-
-    private Movie obj;
-
-    @FXML
     private Button cancelButton;
 
+    private MainController mainController;
     private MediaPlayer durationPlayer;
-
-    private int duration;
-
-
     private File selectedFile;
+    private Movie obj;
+    private int duration;
+    private String type;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -80,9 +56,9 @@ public class NewSongController implements Initializable, OtherWindow {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose MP4 or mpeg4 File");
 
-        FileChooser.ExtensionFilter mp3Filter =
-                new FileChooser.ExtensionFilter("MP4 Files (*.mp4)", "*.mp4");
-        fileChooser.getExtensionFilters().add(mp3Filter);
+        FileChooser.ExtensionFilter mp4Filter =
+                new FileChooser.ExtensionFilter("MP4 Files (*.mp4)", "*.mp4", ".mpeg4");
+        fileChooser.getExtensionFilters().add(mp4Filter);
 
         Stage stage = (Stage) chooseFileButton.getScene().getWindow();
         selectedFile = fileChooser.showOpenDialog(stage);
@@ -110,7 +86,6 @@ public class NewSongController implements Initializable, OtherWindow {
         if (type.equals("Edit")) {
             fillFields();
         }
-
     }
 
     private void setEditTime(){
@@ -128,8 +103,6 @@ public class NewSongController implements Initializable, OtherWindow {
         }
 
         try {
-            File file = selectedFile;
-
             Media media = new Media(selectedFile.toURI().toString());
             durationPlayer = new MediaPlayer(media);
 
@@ -155,7 +128,6 @@ public class NewSongController implements Initializable, OtherWindow {
             timeField.setText("Unknown");
         }
     }
-
 
     @FXML
     private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
@@ -189,13 +161,11 @@ public class NewSongController implements Initializable, OtherWindow {
 
 
         if (type.equals("New")) {
-            Media media = new Media(selectedFile.toURI().toString());
-            int durationInSeconds = (int) media.getDuration().toSeconds();
-            mainController.getNewSongData(titleField.getText(), this.duration, rating, selectedFile);
+            mainController.getNewMovieData(titleField.getText(), this.duration, rating, selectedFile);
             closeWindow();
         }
         else {
-            mainController.getEditSongData(titleField.getText(), rating, obj);
+            mainController.getEditMovieData(titleField.getText(), rating, obj);
             closeWindow();
         }
     }

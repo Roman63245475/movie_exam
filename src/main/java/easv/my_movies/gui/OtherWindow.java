@@ -1,4 +1,4 @@
-package easv.my_tunes.gui;
+package easv.my_movies.gui;
 
 public interface OtherWindow {
     void getMainController(MainController mainController);

@@ -1,10 +1,10 @@
-package easv.my_tunes.bll;
+package easv.my_movies.bll;
 
-import easv.my_tunes.be.Category;
-import easv.my_tunes.be.Movie;
-import easv.my_tunes.dal.CategoriesAccessObject;
-import easv.my_tunes.dal.Movie_CategoryAccessObject;
-import easv.my_tunes.dal.MoviesAccessObject;
+import easv.my_movies.be.Category;
+import easv.my_movies.be.Movie;
+import easv.my_movies.dal.CategoriesAccessObject;
+import easv.my_movies.dal.Movie_CategoryAccessObject;
+import easv.my_movies.dal.MoviesAccessObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,49 +16,49 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class Logic {
-    MoviesAccessObject songsAccessObject;
-    CategoriesAccessObject playListAccessObject;
-    Movie_CategoryAccessObject playLists_songs_AccessObject;
+    MoviesAccessObject MoviesAccessObject;
+    CategoriesAccessObject CategoryAccessObject;
+    Movie_CategoryAccessObject Categorys_Movies_AccessObject;
 
     public Logic() {
-        songsAccessObject = new MoviesAccessObject();
-        playListAccessObject = new CategoriesAccessObject();
-        playLists_songs_AccessObject = new Movie_CategoryAccessObject();
+        MoviesAccessObject = new MoviesAccessObject();
+        CategoryAccessObject = new CategoriesAccessObject();
+        Categorys_Movies_AccessObject = new Movie_CategoryAccessObject();
     }
 
     public List<Movie> loadMovies() {
-        return songsAccessObject.getMovies();
+        return MoviesAccessObject.getMovies();
     }
 
     public List<Category> loadCategories(){
-        return playListAccessObject.getCategories();
+        return CategoryAccessObject.getCategories();
     }
 
-    public void saveSong(String title, int time, int rating, File file) {
+    public void saveMovie(String title, int time, int rating, File file) {
         Path targetPath = createFile(file);
-        songsAccessObject.saveSong(title, time, rating, targetPath);
+        MoviesAccessObject.saveMovie(title, time, rating, targetPath);
     }
 
     public void saveCategory(String name){
-        playListAccessObject.saveCategory(name);
+        CategoryAccessObject.saveCategory(name);
     }
 
-    public void editPlaylist(String name, Category obj) throws IOException {
-        playListAccessObject.editPlaylist(name, obj);
+    public void editCategory(String name, Category obj) throws IOException {
+        CategoryAccessObject.editCategory(name, obj);
     }
 
-    public void addSongToPlaylist(Category playlist, Movie song) {
-        playLists_songs_AccessObject.addSongToPlaylist(playlist, song);
+    public void addMovieToCategory(Category Category, Movie Movie) {
+        Categorys_Movies_AccessObject.addMovieToCategory(Category, Movie);
     }
 
-    public void editSong(String title, int rating, Movie obj) {
+    public void editMovie(String title, int rating, Movie obj) {
         //obj.setTitle(title);
         //obj.setTime(time);
-        songsAccessObject.editSong(title, rating, obj);
+        MoviesAccessObject.editMovie(title, rating, obj);
     }
 
-    public void deleteSong(Movie song) {
-        File file = new File(song.getPath()).getAbsoluteFile();
+    public void deleteMovie(Movie Movie) {
+        File file = new File(Movie.getPath()).getAbsoluteFile();
 
         if (file.exists()) {
             // Даём время антивирусу и системе освободить файл
@@ -71,7 +71,7 @@ public class Logic {
             }
         }
 
-        songsAccessObject.deleteSong(song);
+        MoviesAccessObject.deleteMovie(Movie);
     }
 
     private boolean deleteWithRetry(File file) {
@@ -119,14 +119,14 @@ public class Logic {
         }
     }
 
-    public void deletePlaylist(Category playlist) {
-        playListAccessObject.deletePlaylist(playlist);
+    public void deleteCategory(Category Category) {
+        CategoryAccessObject.deleteCategory(Category);
     }
 
 
 
     private Path createFile(File file) {
-        Path dirPath = Path.of("src/main/resources/easv/my_tunes/movies");
+        Path dirPath = Path.of("src/main/resources/easv/my_movies/movies");
         dirPath.toFile().mkdirs();
 
         String baseName = file.getName();
@@ -167,12 +167,12 @@ public class Logic {
 //        }
 //    }
 
-    public void deleteSongFromPlaylist(Movie song, Category playlist) {
-        playLists_songs_AccessObject.deleteSong(song, playlist);
+    public void deleteMovieFromCategory(Movie Movie, Category Category) {
+        Categorys_Movies_AccessObject.deleteMovie(Movie, Category);
     }
 
-    public List<Movie> getSongsOnPlaylist(Category playlist){
-        return playLists_songs_AccessObject.getSongsOnPlaylist(playlist);
+    public List<Movie> getMoviesOnCategory(Category Category){
+        return Categorys_Movies_AccessObject.getMoviesOnCategory(Category);
     }
 }
 

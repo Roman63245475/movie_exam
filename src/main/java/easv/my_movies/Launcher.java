@@ -1,6 +1,6 @@
-package easv.my_tunes;
+package easv.my_movies;
 
-import easv.my_tunes.gui.StartApplication;
+import easv.my_movies.gui.StartApplication;
 import javafx.application.Application;
 
 public class Launcher {

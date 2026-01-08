@@ -1,20 +1,18 @@
-package easv.my_tunes.gui;
+package easv.my_movies.gui;
 
-import easv.my_tunes.be.Category;
+import easv.my_movies.be.Category;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class AddNewPlayListController implements OtherWindow {
-
-    private MainController mainController;
-    private String type;
-
+public class AddNewCategoryController implements OtherWindow {
     @FXML
     private TextField nameField;
 
+    private MainController mainController;
+    private String type;
     private Category obj;
 
     @FXML
@@ -36,11 +34,11 @@ public class AddNewPlayListController implements OtherWindow {
         String name = nameField.getText();
         if (!name.trim().isEmpty()){
             if (type.equals("New")){
-                mainController.getNewPlayListData(name);
+                mainController.getNewCategoryData(name);
                 onCancelButton();
             }
             else{
-                mainController.getEditPlaylistData(obj, name);
+                mainController.getEditCategoryData(obj, name);
                 onCancelButton();
             }
         }
@@ -49,6 +47,4 @@ public class AddNewPlayListController implements OtherWindow {
     public void getMainController(MainController mainController){
         this.mainController = mainController;
     }
-
-
 }

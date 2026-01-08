@@ -1,7 +1,7 @@
-package easv.my_tunes.dal;
+package easv.my_movies.dal;
 
-import easv.my_tunes.be.Category;
-import easv.my_tunes.be.Movie;
+import easv.my_movies.be.Category;
+import easv.my_movies.be.Movie;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,12 +22,12 @@ public class Movie_CategoryAccessObject {
         }
     }
 
-    public void addSongToPlaylist(Category playlist, Movie song) {
+    public void addMovieToCategory(Category Category, Movie Movie) {
         try (Connection con = cm.getConnection()){
             String sqlPrompt = "Insert Into movie_category (movie_id, category_id) VALUES (?, ?)";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
-            ps.setInt(1, song.getID());
-            ps.setInt(2, playlist.getID());
+            ps.setInt(1, Movie.getID());
+            ps.setInt(2, Category.getID());
             ps.execute();
         }
         catch (SQLException e){
@@ -35,11 +35,11 @@ public class Movie_CategoryAccessObject {
         }
     }
 
-    public void deleteSong(Movie song, Category playlist) {
+    public void deleteMovie(Movie Movie, Category Category) {
         try (Connection con = cm.getConnection()){
             String sqlPrompt = "delete from movie_category where id=?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
-            ps.setInt(1, song.getPlaylist_song_id());
+            ps.setInt(1, Movie.getCategory_Movie_id());
             ps.execute();
         }
         catch (SQLException e){
@@ -47,12 +47,12 @@ public class Movie_CategoryAccessObject {
         }
     }
 
-    public List<Movie> getSongsOnPlaylist(Category playlist) {
+    public List<Movie> getMoviesOnCategory(Category Category) {
         List<Movie> movies = new ArrayList<>();
         try (Connection con = cm.getConnection()){
             String sqlPrompt = "select movie_category.id as field_id, movie_table.id as movie_id, movie_table.name as movie_name, movie_table.duration as movie_time, movie_table.path as movie_path from movie_category INNER JOIN movie_table on movie_category.movie_id = movie_table.id where movie_category.category_id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
-            ps.setInt(1, playlist.getID());
+            ps.setInt(1, Category.getID());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int field_id = rs.getInt("field_id");

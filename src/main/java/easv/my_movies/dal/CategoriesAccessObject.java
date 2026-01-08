@@ -1,7 +1,7 @@
-package easv.my_tunes.dal;
+package easv.my_movies.dal;
 
-import easv.my_tunes.be.Category;
-import easv.my_tunes.be.Movie;
+import easv.my_movies.be.Category;
+import easv.my_movies.be.Movie;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -77,10 +77,10 @@ public class CategoriesAccessObject {
         }
     }
 
-    public void editPlaylist(String name, Category obj) throws IOException {
+    public void editCategory(String name, Category obj) throws IOException {
         cm = new ConnectionManager();
         try(Connection con = cm.getConnection()){
-            String sqlPrompt =  "Update playlists set name = ? where id = ?";
+            String sqlPrompt =  "Update category_table set name = ? where id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setString(1, name);
             ps.setInt(2, obj.getID());
@@ -90,16 +90,16 @@ public class CategoriesAccessObject {
             throw new RuntimeException(ex);
         }
     }
-    public void deletePlaylist(Category playlist) {
+    public void deleteCategory(Category category) {
         try (Connection con = cm.getConnection()) {
             String sqlRel = "DELETE FROM movie_category WHERE category_id = ?";
             PreparedStatement psRel = con.prepareStatement(sqlRel);
-            psRel.setInt(1, playlist.getID());
+            psRel.setInt(1, category.getID());
             psRel.execute();
 
             String sql = "DELETE FROM category_table WHERE id = ?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, playlist.getID());
+            ps.setInt(1, category.getID());
             ps.execute();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

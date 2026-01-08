@@ -1,4 +1,4 @@
-package easv.my_tunes.dal;
+package easv.my_movies.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;

@@ -1,4 +1,4 @@
-package easv.my_tunes.be;
+package easv.my_movies.be;
 
 public class Movie {
     private int id;
@@ -16,7 +16,7 @@ public class Movie {
         this.movie_category_id = movie_category_id;
     }
 
-    public int getPlaylist_song_id() {
+    public int getCategory_Movie_id() {
         return movie_category_id;
     }
     public int getRating(){
