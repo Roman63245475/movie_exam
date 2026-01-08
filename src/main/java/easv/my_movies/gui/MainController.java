@@ -110,7 +110,6 @@ public class MainController implements Initializable {
         });
     }
 
-
     private void setActionOnSelectedItemTableView() {
         CategoriesTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
