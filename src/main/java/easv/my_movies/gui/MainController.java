@@ -140,11 +140,11 @@ public class MainController implements Initializable {
             Parent root = loader.load();
             PlayerController controller = loader.getController();
             controller.updateMoviesList(moviesTable.getItems());
-            controller.setVideo(player);
             Scene s = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Kalivan Player");
             stage.setScene(s);
+            controller.setVideo(player);
             stage.show();
 
             stage.setOnCloseRequest(e -> {
