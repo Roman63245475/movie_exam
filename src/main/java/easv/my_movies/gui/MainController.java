@@ -67,7 +67,7 @@ public class MainController implements Initializable {
     private Category selected_Category;
     private FilteredList<Movie> filteredMovies;
     private MediaPlayer player;
-    private boolean flag;
+    //private boolean flag;
 
     @FXML
     private void onCloseClick(){
@@ -91,7 +91,7 @@ public class MainController implements Initializable {
     private void setActionOnSelectedItemTableViewMovies() {
         moviesTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                flag = true;
+                //flag = true;
                 moviesInCategoryList.getSelectionModel().clearSelection();
                 Media media = new Media(new File(newValue.getPath()).toURI().toString());
                 player = new MediaPlayer(media);
@@ -102,7 +102,7 @@ public class MainController implements Initializable {
     private void setActionOnSelectedItemListView() {
         moviesInCategoryList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                flag = false;
+                //flag = false;
                 moviesTable.getSelectionModel().clearSelection();
                 Media media = new Media(new File(newValue.getPath()).toURI().toString());
                 player = new MediaPlayer(media);
@@ -235,9 +235,9 @@ public class MainController implements Initializable {
         Category category = CategoriesTable.getSelectionModel().getSelectedItem();
         if (movie != null && category != null) {
             logic.addMovieToCategory(category, movie);
+            displayMoviesInCategory(category);
         }
         displayCategories(logic.loadCategories());
-        displayMoviesInCategory(category);
     }
 
     @FXML
