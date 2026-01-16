@@ -93,9 +93,10 @@
                         <Label styleClass="header-label" text="ALL MOVIES" />
                         <TableView fx:id="moviesTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="movieTitle" prefWidth="100.0" text="Title" />
-                                <TableColumn fx:id="ratingColumn" prefWidth="60.0" text="Rating" />
-                        <TableColumn fx:id="movieDuration" prefWidth="60.0" text="Duration" />
+                                <TableColumn fx:id="movieTitle" prefWidth="101.59996347427386" text="Title" />
+                                <TableColumn fx:id="ratingColumn" prefWidth="104.79993438720703" text="Rating" />
+                        <TableColumn fx:id="imbdRating" prefWidth="196.80006408691406" text="Imbd Rating" />
+                        <TableColumn fx:id="movieDuration" prefWidth="196.80006408691406" text="Duration" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

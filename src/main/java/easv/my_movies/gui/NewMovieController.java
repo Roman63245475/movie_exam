@@ -31,6 +31,9 @@ public class NewMovieController implements Initializable, OtherWindow {
     private TextField timeField;
 
     @FXML
+    private TextField imbdRating;
+
+    @FXML
     private TextField filePathField;
 
     @FXML
@@ -127,6 +130,7 @@ public class NewMovieController implements Initializable, OtherWindow {
     @FXML
     private void onSaveClick() throws CannotReadException, TagException, InvalidAudioFrameException, ReadOnlyFileException, IOException {
         Integer rating;
+        Integer imbdRatingInt;
         if (titleField.getText().trim().isEmpty()) {
             showAlert("Validation Error", "Please enter a title.");
             return;
@@ -147,6 +151,17 @@ public class NewMovieController implements Initializable, OtherWindow {
             showAlert("Validation Error", "Rating must be an integer");
             return;
         }
+        try{
+            imbdRatingInt = Integer.parseInt(imbdRating.getText());
+            if (imbdRatingInt < 0 || imbdRatingInt > 10) {
+                showAlert("Validation Error", "IMBD Rating must be between 0 and 10");
+                return;
+            }
+        }
+        catch (NumberFormatException e){
+            showAlert("Validation Error", "Rating must be an integer");
+            return;
+        }
 
 
         if (selectedFile == null && type.equals("New")) {
@@ -156,7 +171,7 @@ public class NewMovieController implements Initializable, OtherWindow {
 
 
         if (type.equals("New")) {
-            mainController.getNewMovieData(titleField.getText(), this.duration, rating, selectedFile);
+            mainController.getNewMovieData(titleField.getText(), this.duration, rating, imbdRatingInt, selectedFile);
             closeWindow();
         }
         else {
@@ -169,6 +184,8 @@ public class NewMovieController implements Initializable, OtherWindow {
         titleField.setText(obj.getName());
         timeField.setText(obj.getTime());
         filePathField.setText(obj.getPath());
+        imbdRating.setText(obj.getImbdRating());
+        imbdRating.setEditable(false);
         ratingField.setText(String.valueOf(obj.getRating()));
     }
 

@@ -34,9 +34,9 @@ public class Logic {
         return CategoryAccessObject.getCategories();
     }
 
-    public void saveMovie(String title, int time, int rating, File file) {
+    public void saveMovie(String title, int time, int rating, int imbdRating, File file) {
         Path targetPath = createFile(file);
-        MoviesAccessObject.saveMovie(title, time, rating, targetPath);
+        MoviesAccessObject.saveMovie(title, time, rating, imbdRating, targetPath);
     }
 
     public void saveCategory(String name){

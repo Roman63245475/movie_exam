@@ -7,14 +7,20 @@ public class Movie {
     private String path;
     private int movie_category_id;
     private int rating;
+    private int imbdRating;
 
-    public Movie(int id, String name, int time, String path, int movie_category_id, int rating) {
+    public Movie(int id, String name, int time, String path, int movie_category_id, int rating, int imbdRating) {
         this.id = id;
+        this.imbdRating = imbdRating;
         this.rating = rating;
         this.name = name;
         this.time = time;
         this.path = path;
         this.movie_category_id = movie_category_id;
+    }
+
+    public String getImbdRating() {
+        return String.valueOf(imbdRating);
     }
 
     public int getCategory_Movie_id() {
@@ -24,8 +30,9 @@ public class Movie {
         return this.rating;
     }
 
-    public Movie(int id, String name, int time, String path, int rating) {
+    public Movie(int id, String name, int time, String path, int rating, int imbdRating) {
         this.id = id;
+        this.imbdRating = imbdRating;
         this.name = name;
         this.time = time;
         this.path = path;

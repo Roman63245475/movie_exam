@@ -50,7 +50,7 @@ public class Movie_CategoryAccessObject {
     public List<Movie> getMoviesOnCategory(Category Category) {
         List<Movie> movies = new ArrayList<>();
         try (Connection con = cm.getConnection()){
-            String sqlPrompt = "select movie_category.id as field_id, movie_table.id as movie_id, movie_table.rating as movie_rating, movie_table.name as movie_name, movie_table.duration as movie_time, movie_table.path as movie_path from movie_category INNER JOIN movie_table on movie_category.movie_id = movie_table.id where movie_category.category_id = ?";
+            String sqlPrompt = "select movie_category.id as field_id, movie_table.id as movie_id, movie_table.imbdRating as movie_imbdRating, movie_table.rating as movie_rating, movie_table.name as movie_name, movie_table.duration as movie_time, movie_table.path as movie_path from movie_category INNER JOIN movie_table on movie_category.movie_id = movie_table.id where movie_category.category_id = ?";
             PreparedStatement ps = con.prepareStatement(sqlPrompt);
             ps.setInt(1, Category.getID());
             ResultSet rs = ps.executeQuery();
@@ -60,8 +60,9 @@ public class Movie_CategoryAccessObject {
                 String movieName = rs.getString("movie_name");
                 int movie_time = rs.getInt("movie_time");
                 String movie_path = rs.getString("movie_path");
+                int imbdRating = rs.getInt("movie_imbdRating");
                 int rating = rs.getInt("movie_rating");
-                movies.add(new Movie(movie_id, movieName, movie_time, movie_path, field_id, rating));
+                movies.add(new Movie(movie_id, movieName, movie_time, movie_path, field_id, rating, imbdRating));
             }
             return movies;
         }

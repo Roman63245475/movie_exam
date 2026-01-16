@@ -46,6 +46,9 @@ public class MainController implements Initializable {
     private Button EditCategoryButton;
 
     @FXML
+    private TableColumn<Movie, Integer> imbdRating;
+
+    @FXML
     private Button EditMovieButton;
 
     @FXML
@@ -302,6 +305,7 @@ public class MainController implements Initializable {
         movieTitle.setCellValueFactory(new PropertyValueFactory<>("name"));
         movieDuration.setCellValueFactory(new PropertyValueFactory<>("time"));
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("rating"));
+        imbdRating.setCellValueFactory(new PropertyValueFactory<>("imbdRating"));
         moviesTable.setItems(sortedData);
     }
 
@@ -313,8 +317,8 @@ public class MainController implements Initializable {
         CategoriesTable.setItems(categoriesList);
     }
 
-    public void getNewMovieData(String title, int time, int rating, File file) {
-        logic.saveMovie(title, time, rating, file);
+    public void getNewMovieData(String title, int time, int rating, int imbdRating, File file) {
+        logic.saveMovie(title, time, rating, imbdRating, file);
         displayMovies(logic.loadMovies());
     }
 
