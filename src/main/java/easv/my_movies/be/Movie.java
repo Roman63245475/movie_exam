@@ -8,8 +8,9 @@ public class Movie {
     private int movie_category_id;
     private int rating;
 
-    public Movie(int id, String name, int time, String path, int movie_category_id, String empty) {
+    public Movie(int id, String name, int time, String path, int movie_category_id, int rating) {
         this.id = id;
+        this.rating = rating;
         this.name = name;
         this.time = time;
         this.path = path;

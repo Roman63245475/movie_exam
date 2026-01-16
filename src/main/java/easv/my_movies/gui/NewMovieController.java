@@ -110,15 +110,15 @@ public class NewMovieController implements Initializable, OtherWindow {
                 String duration = String.format("%d:%02d", minutes, seconds);
 
                 Platform.runLater(() -> timeField.setText(duration));
+                //timeField.setText(duration);
 
-                // ⛔ сначала остановка, потом dispose
                 durationPlayer.stop();
                 durationPlayer.dispose();
                 durationPlayer = null;
             });
             durationPlayer.play();
         } catch (Exception e) {
-            System.err.println("Error reading MP3 file duration: " + e.getMessage());
+            System.err.println("Error reading MP4 file duration: " + e.getMessage());
             e.printStackTrace();
             timeField.setText("Unknown");
         }

@@ -52,7 +52,13 @@ public class MainController implements Initializable {
     private TableView<Category> CategoriesTable;
 
     @FXML
-    private ListView<Movie> moviesInCategoryList;
+    private TableView<Movie> moviesInCategoryList;
+
+    @FXML
+    private TableColumn<Movie, Integer> moviesInCategoryListRating;
+
+    @FXML
+    private TableColumn<Movie, String> moviesInCategoryListName;
 
     @FXML
     private TableColumn<Category, String> categoryName;
@@ -122,6 +128,8 @@ public class MainController implements Initializable {
     private void displayMoviesInCategory(Category Category) {
         ObservableList<Movie> lst = FXCollections.observableArrayList();
         lst.addAll(logic.getMoviesOnCategory(Category));
+        moviesInCategoryListName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        moviesInCategoryListRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
         moviesInCategoryList.setItems(lst);
     }
 
@@ -246,8 +254,10 @@ public class MainController implements Initializable {
         Movie movie = moviesInCategoryList.getSelectionModel().getSelectedItem();
         //Category Category = CategoriesTable.getSelectionModel().getSelectedItem();
         if (movie != null && selected_Category != null) {
-            player.stop();
-            player = null;
+            if (player != null) {
+                player.stop();
+                player = null;
+            }
             int id = selected_Category.getID();
             logic.deleteMovieFromCategory(movie, selected_Category);
             List<Category> Categorys = logic.loadCategories();
